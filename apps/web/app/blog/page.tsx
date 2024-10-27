@@ -1,41 +1,48 @@
+'use client';
 import Link from 'next/link';
-import { fetchPosts } from './lib/data';
-import { CalendarIcon } from 'lucide-react';
+import ChatProvider from '../business/hooks/linguistic-guidance/provider/chat-provider';
+import MockingUser from '../ui/components/util/mocking-user';
+import { SWRProvider } from '../ui/components/util/swr-provider';
+import ChatAiNavigator from '../ui/pages/workspace/chat-ai-navigator';
+import FloatingComponentContainer from '../ui/pages/workspace/floating-component-container';
+import SideNav from '../ui/pages/workspace/side-bar/sidenav';
+import SplitScreenToggleGroup from '../ui/pages/workspace/split-screen/split-screen-toggle-group';
+import Workspace from '../ui/pages/workspace/workspace';
+import Callout from '../ui/components/view/molecule/callout';
 
-export default async function Page() {
-  const posts = await fetchPosts();
-
+export default function Page() {
   return (
     <>
-      <div className="mx-auto max-w-2xl ">
-        <div className="flex flex-col items-center justify-center pb-28 pt-20">
-          <h2 className="mb-2 text-4xl font-bold">FINGOO 블로그</h2>
-        </div>
-        {posts.map((post) => (
-          <Link key={post.id} href={`/blog/${post.id}`}>
-            <BlogPostItem title={post.title} date={post.updatedAt.toISOString().slice(0, 10)} preview={post.preview} />
-          </Link>
-        ))}
-      </div>
+      <MockingUser>
+        <ChatProvider>
+          <SWRProvider>
+            <div className="flex h-screen md:flex-row md:overflow-hidden">
+              <SideNav />
+              <div className="grow bg-fingoo-gray-1.5">
+                <div className="relative h-full w-full">
+                  <div className="absolute left-1/2 top-2 z-10 -translate-x-1/2 rounded-lg ">
+                    <SplitScreenToggleGroup />
+                  </div>
+                  <div className="flex h-full items-center justify-center">
+                    <Workspace />
+                  </div>
+                  <div className="absolute bottom-2 left-1/2 z-10 -translate-x-1/2 rounded-lg ">
+                    <Callout>
+                      FINGOO 블로그로 이동하려면{'   '}
+                      <Link className="underline hover:text-gray-100" href="/blog">
+                        여기
+                      </Link>
+                      를 클릭하세요.
+                    </Callout>
+                  </div>
+                </div>
+              </div>
+              <ChatAiNavigator />
+              <FloatingComponentContainer />
+            </div>
+          </SWRProvider>
+        </ChatProvider>
+      </MockingUser>
     </>
-  );
-}
-
-interface BlogPostProps {
-  title: string;
-  date: string;
-  preview: string;
-}
-
-function BlogPostItem({ title, date, preview }: BlogPostProps) {
-  return (
-    <article className="mb-8 border-b border-gray-200 pb-8">
-      <h2 className="mb-2 text-2xl font-bold">{title}</h2>
-      <div className="mb-4 flex items-center text-sm text-gray-500">
-        <CalendarIcon className="mr-2 h-4 w-4" />
-        <time dateTime={date}>{date}</time>
-      </div>
-      <p className="line-clamp-3 text-ellipsis text-sm leading-7 text-gray-600">{preview}</p>
-    </article>
   );
 }
