@@ -29,7 +29,7 @@ export default function Page() {
                   <div className="absolute bottom-2 left-1/2 z-10 -translate-x-1/2 rounded-lg ">
                     <Callout>
                       FINGOO 블로그로 이동하려면{'   '}
-                      <Link className="underline hover:text-gray-100" href="/blog">
+                      <Link className="underline hover:text-gray-100" href="/">
                         여기
                       </Link>
                       를 클릭하세요.
