@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { fetchPostDetail } from '../lib/data';
+import { fetchPostDetail } from './lib/data';
 
 export default async function Page({ params }: { params: { id: string } }) {
   const post = await fetchPostDetail(params.id);
@@ -7,8 +7,6 @@ export default async function Page({ params }: { params: { id: string } }) {
   const { title, content, updatedAt } = post;
 
   const date = updatedAt.toISOString().slice(0, 10);
-
-  console.log();
 
   const contentArray = content.split('\n');
   return (

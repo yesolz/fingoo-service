@@ -13,26 +13,29 @@ import {
 export default function BlogBreadcrumb() {
   const pathname = usePathname();
 
+  console.log(pathname);
+
   return (
     <Breadcrumb>
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink href="/">FINGOO</BreadcrumbLink>
         </BreadcrumbItem>
-        {pathname.startsWith('/blog') ? (
+        {/* {pathname.startsWith('/blog') ? (
           <>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
               <BreadcrumbLink href="/blog">BLOG</BreadcrumbLink>
             </BreadcrumbItem>
-            {pathname.split('/').length > 2 ? (
-              <>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>POST</BreadcrumbPage>
-                </BreadcrumbItem>
-              </>
-            ) : null}
+            
+          </>
+        ) : null} */}
+        {pathname !== '/' ? (
+          <>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>POST</BreadcrumbPage>
+            </BreadcrumbItem>
           </>
         ) : null}
       </BreadcrumbList>
