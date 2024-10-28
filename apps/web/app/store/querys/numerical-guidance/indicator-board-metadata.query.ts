@@ -21,6 +21,7 @@ export type IndicatorBoardMetadataResponse = {
   sections: {
     [sectionId: string]: string[];
   };
+  updatedAt: string;
 };
 
 export type CreateIndicatorMetadataRequestBody = {
