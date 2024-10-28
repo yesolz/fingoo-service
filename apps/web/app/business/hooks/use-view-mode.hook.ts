@@ -11,11 +11,17 @@ export const useViewMode = () => {
     setChatbotSidebarCollapsed(true);
   };
 
+  const disableViewMode = () => {
+    setSideNavbarCollapsed(false);
+    setChatbotSidebarCollapsed(false);
+  };
+
   return {
     isViewMode,
     setSideNavbarCollapsed,
     setChatbotSidebarCollapsed,
     enableViewMode,
+    disableViewMode,
     sideNavbarCollapsed,
     chatbotSidebarCollapsed,
   };
