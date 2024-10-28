@@ -82,9 +82,8 @@ export const useIndicatorBoardMetadataViewModel = (metadataId: string | undefine
         sections: newIndicatorBoardMetadataById.indicatorIdsWithSectionIds,
       },
       {
-        optimisticData: (): IndicatorBoardMetadataResponse[] | undefined => {
-          return newIndicatorBoardMetadataList?.formattedIndicatorBoardMetadataList;
-        },
+        optimisticData: (): IndicatorBoardMetadataResponse[] | undefined =>
+          newIndicatorBoardMetadataList?.formattedIndicatorBoardMetadataList,
         revalidate: false,
       },
     );
@@ -107,9 +106,8 @@ export const useIndicatorBoardMetadataViewModel = (metadataId: string | undefine
         sections: newIndicatorBoardMetadataById?.indicatorIdsWithSectionIds,
       },
       {
-        optimisticData: (): IndicatorBoardMetadataResponse[] | undefined => {
-          return newIndicatorBoardMetadataList?.formattedIndicatorBoardMetadataList;
-        },
+        optimisticData: (): IndicatorBoardMetadataResponse[] | undefined =>
+          newIndicatorBoardMetadataList?.formattedIndicatorBoardMetadataList,
         revalidate: false,
       },
     );
