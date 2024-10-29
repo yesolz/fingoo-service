@@ -1,7 +1,7 @@
 import { HttpStatus, INestApplication, ValidationPipe } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import { IndicatorEntity } from '../../../infrastructure/adapter/persistence/indicator/entity/indicator.entity';
-import { MemberEntity } from '../../../../auth/entity/member.entity';
+import { UserMetadataEntity } from '../../../../user/infrastructure/adapter/persistence/entity/user-metadata.entity';
 import { HistoryIndicatorEntity } from '../../../infrastructure/adapter/persistence/history-indicator/entity/history-indicator.entity';
 import * as fs from 'fs';
 import { HistoryIndicatorValueEntity } from '../../../infrastructure/adapter/persistence/history-indicator-value/entity/history-indicator-value.entity';
@@ -14,13 +14,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { HttpModule } from '@nestjs/axios';
 import { HistoryIndicatorController } from '../../../api/history-indicator/history-indicator.controller';
 import { AdjustIndicatorValue } from '../../../util/adjust-indicator-value';
-import { AuthService } from '../../../../auth/application/auth.service';
 import { GetHistoryIndicatorQueryHandler } from '../../../application/query/history-indicator/get-history-indicator/get-history-indicator.query.handler';
-import { CustomAuthGuard } from '../../../../auth/util/custom-auth.guard';
+import { JwtAuthGuard } from '../../../../user/util/jwt-auth.guard';
 import { of } from 'rxjs';
-import { HttpExceptionFilter } from '../../../../utils/exception-filter/http-exception-filter';
+import { HttpExceptionFilter } from '../../../../commons/exception-filter/http-exception-filter';
 import * as request from 'supertest';
 import { HistoryIndicatorPersistentAdapter } from '../../../infrastructure/adapter/persistence/history-indicator/history-indicator.persistent.adapter';
+import { PostEntity } from '../../../../community/infrastructure/adapter/persistence/entity/post.entity';
 
 jest.mock('typeorm-transactional', () => ({
   Transactional: () => () => ({}),
@@ -32,8 +32,8 @@ describe('History Indicator E2E Test', () => {
   let DBenvironment;
 
   const seeding = async () => {
-    const memberEntity = dataSource.getRepository(MemberEntity);
-    await memberEntity.insert({ id: '1', email: 'test@gmail.com' });
+    const memberEntity = dataSource.getRepository(UserMetadataEntity);
+    await memberEntity.insert({ userId: '1', email: 'test@gmail.com', username: 'testname' });
 
     const indicatorEntity = dataSource.getRepository(IndicatorEntity);
     await indicatorEntity.insert({
@@ -95,7 +95,12 @@ describe('History Indicator E2E Test', () => {
           ConfigModule.forRoot({
             isGlobal: true,
           }),
-          TypeOrmModule.forFeature([MemberEntity, HistoryIndicatorEntity, HistoryIndicatorValueEntity]),
+          TypeOrmModule.forFeature([
+            UserMetadataEntity,
+            PostEntity,
+            HistoryIndicatorEntity,
+            HistoryIndicatorValueEntity,
+          ]),
           TypeOrmModule.forRootAsync({
             imports: [ConfigModule],
             inject: [ConfigService],
@@ -109,7 +114,8 @@ describe('History Indicator E2E Test', () => {
               password: DBenvironment.getPassword(),
               database: DBenvironment.getDatabase(),
               entities: [
-                MemberEntity,
+                UserMetadataEntity,
+                PostEntity,
                 IndicatorEntity,
                 HistoryIndicatorEntity,
                 HistoryIndicatorValueEntity,
@@ -128,7 +134,6 @@ describe('History Indicator E2E Test', () => {
         controllers: [HistoryIndicatorController],
         providers: [
           AdjustIndicatorValue,
-          AuthService,
           GetHistoryIndicatorQueryHandler,
           {
             provide: 'LoadHistoryIndicatorPort',
@@ -139,12 +144,9 @@ describe('History Indicator E2E Test', () => {
             useClass: AdjustIndicatorValue,
           },
           {
-            provide: CustomAuthGuard,
+            provide: JwtAuthGuard,
             useValue: {
-              canActivate: jest.fn().mockImplementation((context) => {
-                const request = context.switchToHttp().getRequest();
-                const member: MemberEntity = { id: '1', email: 'test@gmail.com' };
-                request.member = member;
+              canActivate: jest.fn().mockImplementation(() => {
                 return of(true);
               }),
             },
