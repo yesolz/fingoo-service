@@ -12,11 +12,11 @@ import { ForexPairEntity } from '../../../../infrastructure/adapter/persistence/
 import { FundEntity } from '../../../../infrastructure/adapter/persistence/indicator/entity/fund.entity';
 import { IndicesEntity } from '../../../../infrastructure/adapter/persistence/indicator/entity/indices.entity';
 import { StockEntity } from '../../../../infrastructure/adapter/persistence/indicator/entity/stock.entity';
-import { CursorPageDto } from '../../../../../utils/pagination/cursor-page.dto';
+import { CursorPageDto } from '../../../../../commons/pagination/cursor-page.dto';
 import { BadRequestException, HttpStatus, NotFoundException } from '@nestjs/common';
 import { GetIndicatorListQuery } from '../../../../application/query/indicator/get-indicator-list/get-indicator-list.query';
 import * as fs from 'fs';
-import { IndicatorDtoType } from '../../../../../utils/type/type-definition';
+import { IndicatorDtoType } from '../../../../../commons/type/type-definition';
 import { TwelveApiManager } from '../../../../infrastructure/adapter/twelve/util/twelve-api.manager';
 import { HttpModule } from '@nestjs/axios';
 import { FredApiManager } from '../../../../infrastructure/adapter/fred/util/fred-api.manager';

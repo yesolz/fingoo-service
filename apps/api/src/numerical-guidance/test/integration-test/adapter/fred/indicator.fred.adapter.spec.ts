@@ -1,7 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { ConfigModule } from '@nestjs/config';
 import { HttpModule } from '@nestjs/axios';
-import { LiveIndicatorDtoType } from '../../../../../utils/type/type-definition';
+import { LiveIndicatorDtoType } from '../../../../../commons/type/type-definition';
 import { IndicatorFredAdapter } from '../../../../infrastructure/adapter/fred/indicator.fred.adapter';
 import { FredApiManager } from '../../../../infrastructure/adapter/fred/util/fred-api.manager';
 import { EconomyDto } from '../../../../application/query/indicator/get-indicator-list/dto/economy.dto';
