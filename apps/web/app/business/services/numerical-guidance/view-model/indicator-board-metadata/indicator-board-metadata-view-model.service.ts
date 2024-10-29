@@ -6,6 +6,7 @@ import {
 export class IndicatorBoardMetadata {
   readonly id: string;
   readonly indicatorBoardMetadataName: string;
+  readonly updatedAt: string;
   public customForecastIndicatorIds: string[];
   public indicatorInfos: IndicatorInfoResponse[];
   private _sections: { [key: string]: string[] };
@@ -15,12 +16,14 @@ export class IndicatorBoardMetadata {
     indicatorInfos,
     customForecastIndicatorIds,
     sections,
+    updatedAt,
   }: IndicatorBoardMetadataResponse) {
     this.id = id;
     this.indicatorBoardMetadataName = indicatorBoardMetadataName;
     this._sections = sections;
     this.indicatorInfos = indicatorInfos;
     this.customForecastIndicatorIds = customForecastIndicatorIds;
+    this.updatedAt = updatedAt;
   }
 
   get sections() {
@@ -50,6 +53,7 @@ export class IndicatorBoardMetadata {
       indicatorInfos: this.indicatorInfos,
       customForecastIndicatorIds: this.customForecastIndicatorIds,
       sections: this._sections,
+      updatedAt: this.updatedAt,
     };
   }
 

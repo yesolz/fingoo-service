@@ -1,5 +1,5 @@
 import ToggleGroup from '../../../view/molecule/toggle-group';
-import { intervals, type Interval } from '@/app/store/stores/numerical-guidance/indicator-board.store';
+import { intervals, SplitScreen, type Interval } from '@/app/store/stores/numerical-guidance/indicator-board.store';
 import { cn } from '@/app/utils/style';
 
 function isInterval(value: string): value is Interval {
@@ -10,7 +10,7 @@ export interface BaseIntervalToggleGroupProps {
   interval: Interval;
   onChange: (interval: Interval) => void;
   disabled?: boolean;
-  splitScreen?: 'square' | string;
+  splitScreen?: SplitScreen;
 }
 
 export function BaseIntervalToggleGroup({
@@ -43,12 +43,13 @@ export function BaseIntervalToggleGroup({
   );
 }
 
-function Item({ children, splitScreen }: React.PropsWithChildren<{ splitScreen?: string }>) {
+function Item({ children, splitScreen }: React.PropsWithChildren<{ splitScreen?: SplitScreen }>) {
   return (
     <div
       className={cn({
         'w-20': !splitScreen || splitScreen !== 'square',
         'w-10 text-xs': splitScreen === 'square',
+        'w-10': splitScreen === 'vertical',
       })}
     >
       {children}

@@ -51,7 +51,12 @@ const IndicatorBoard = React.memo(function IndicatorBoard({ indicatorBoardMetada
       >
         <SWRConfig value={{ suspense: true, keepPreviousData: true }}>
           <div className="relative flex items-center justify-center">
-            <EditableMetadataTittle className="max-w-64" indicatorBoardMetadataId={indicatorBoardMetadataId!} />
+            <EditableMetadataTittle
+              className={cn('max-w-64', {
+                'text-md': splitScreen === 'square',
+              })}
+              indicatorBoardMetadataId={indicatorBoardMetadataId!}
+            />
             <div className="absolute right-3 top-1 flex items-center space-x-2">
               <ViewModeTriggerButton />
               <MetadataSharePopover

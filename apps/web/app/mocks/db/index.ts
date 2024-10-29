@@ -53,6 +53,7 @@ const initialState: MockDatabase = {
       sections: {
         section1: [],
       },
+      updatedAt: '2024-08-30',
     },
     {
       id: '2',
@@ -62,6 +63,7 @@ const initialState: MockDatabase = {
       sections: {
         section1: [],
       },
+      updatedAt: '2024-08-30',
     },
     {
       id: '3',
@@ -71,6 +73,7 @@ const initialState: MockDatabase = {
       sections: {
         section1: [],
       },
+      updatedAt: '2024-08-30',
     },
   ],
   indicators: [

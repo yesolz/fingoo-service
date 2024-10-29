@@ -68,37 +68,46 @@ export const useIndicatorBoardMetadataViewModel = (metadataId: string | undefine
   };
 
   const addsectionToIndicatorBoardMetadata = () => {
-    if (!indicatorBoardMetadata) return;
+    if (!convertedIndicatorBoardMetadataList || !metadataId) return;
+
+    const newIndicatorBoardMetadataList =
+      convertedIndicatorBoardMetadataList.addSectionToIndicatorBoardMetadata(metadataId);
+
+    const newIndicatorBoardMetadataById = newIndicatorBoardMetadataList.findIndicatorBoardMetadataById(metadataId);
+
+    if (!newIndicatorBoardMetadataById) return;
 
     updateIndicatorIdsWithsectionIdsTrigger(
       {
-        sections: indicatorBoardMetadata?.indicatorIdsWithSectionIds,
+        sections: newIndicatorBoardMetadataById.indicatorIdsWithSectionIds,
       },
       {
-        optimisticData: (): IndicatorBoardMetadataResponse[] | undefined => {
-          const newIndicatorBoardMetadataList =
-            convertedIndicatorBoardMetadataList?.addSectionToIndicatorBoardMetadata(metadataId);
-          return newIndicatorBoardMetadataList?.formattedIndicatorBoardMetadataList;
-        },
+        optimisticData: (): IndicatorBoardMetadataResponse[] | undefined =>
+          newIndicatorBoardMetadataList?.formattedIndicatorBoardMetadataList,
         revalidate: false,
       },
     );
   };
 
   const deleteSectionFromIndicatorBoardMetadata = (sectionId: number) => {
-    if (!indicatorBoardMetadata) return;
+    if (!convertedIndicatorBoardMetadataList || !metadataId) return;
+
+    const newIndicatorBoardMetadataList = convertedIndicatorBoardMetadataList.deleteSectionFromIndicatorBoardMetadata(
+      metadataId,
+      sectionId,
+    );
+
+    const newIndicatorBoardMetadataById = newIndicatorBoardMetadataList.findIndicatorBoardMetadataById(metadataId);
+
+    if (!newIndicatorBoardMetadataById) return;
 
     updateIndicatorIdsWithsectionIdsTrigger(
       {
-        sections: indicatorBoardMetadata?.indicatorIdsWithSectionIds,
+        sections: newIndicatorBoardMetadataById?.indicatorIdsWithSectionIds,
       },
       {
-        optimisticData: (): IndicatorBoardMetadataResponse[] | undefined => {
-          const newIndicatorBoardMetadataList =
-            convertedIndicatorBoardMetadataList?.deleteSectionFromIndicatorBoardMetadata(metadataId, sectionId);
-
-          return newIndicatorBoardMetadataList?.formattedIndicatorBoardMetadataList;
-        },
+        optimisticData: (): IndicatorBoardMetadataResponse[] | undefined =>
+          newIndicatorBoardMetadataList?.formattedIndicatorBoardMetadataList,
         revalidate: false,
       },
     );

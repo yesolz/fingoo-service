@@ -23,6 +23,8 @@ export default function SimpleIndicatorsChart({ indicatorBoardMetadataId }: Simp
 
   const formattedIndicatorsRows = indicatorFormatter.formattedIndicatorsInRow;
 
+  console.log(indicatorBoardMetadata, formattedIndicatorsRows);
+
   if (!indicatorBoardMetadata?.indicatorIdsWithSectionIds) {
     return (
       <MultiLineChart
@@ -51,7 +53,7 @@ export default function SimpleIndicatorsChart({ indicatorBoardMetadataId }: Simp
           <MultiLineChart
             data-testid={`simple-indicators-chart-section${index + 1}`}
             key={sectionId}
-            data={indicatorBoardMetadata ? formattedIndicatorsRows : []}
+            data={categories.length > 0 ? formattedIndicatorsRows : []}
             categories={categories}
             noDataText={getNoDataText(categories)}
             syncId={indicatorBoardMetadataId}

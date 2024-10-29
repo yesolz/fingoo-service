@@ -38,6 +38,7 @@ export const mockIndicatorBoardMetadataAction: MockIndicatorBoardMetadataAction 
       sections: {
         section1: [],
       },
+      updatedAt: new Date().toISOString(),
     };
     mockDatabaseStore.metadataList = [...mockDatabaseStore.metadataList, newMetadata];
     return id;
