@@ -2,12 +2,12 @@ import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { GetQuoteIndicatorQuery } from './get-quote-indicator.query';
 import { IndicatorQuoteData } from './interface/quote-indicator-data.interface';
-import { IndicatorDtoType } from '../../../../../utils/type/type-definition';
+import { IndicatorDtoType } from '../../../../../commons/type/type-definition';
 import { LoadIndicatorPort } from '../../../port/persistence/indicator/load-indicator.port';
 import { LoadQuoteIndicatorPort } from '../../../port/external/twelve/load-quote-indicator.port';
 import { LoadCachedQuoteIndicatorPort } from '../../../port/cache/load-cached-quote-indicator.port';
 import { CachingQuoteIndicatorPort } from '../../../port/cache/caching-quote-indicator.port';
-import { QuoteIndicatorIntervalEnum } from '../../../../../utils/enum/enum-definition';
+import { QuoteIndicatorIntervalEnum } from '../../../../../commons/enum/enum-definition';
 
 @Injectable()
 @QueryHandler(GetQuoteIndicatorQuery)

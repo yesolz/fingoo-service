@@ -1,5 +1,5 @@
 import { ICommand } from '@nestjs/cqrs';
-import { SourceIndicatorInformation } from 'src/utils/type/type-definition';
+import { SourceIndicatorInformation } from 'src/commons/type/type-definition';
 
 export class UpdateSourceIndicatorsInformationCommand implements ICommand {
   constructor(

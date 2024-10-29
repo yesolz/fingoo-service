@@ -1,5 +1,5 @@
 import { ICommand } from '@nestjs/cqrs';
-import { IndicatorType } from 'src/utils/type/type-definition';
+import { IndicatorType } from 'src/commons/type/type-definition';
 
 export class CreateCustomForecastIndicatorCommand implements ICommand {
   constructor(

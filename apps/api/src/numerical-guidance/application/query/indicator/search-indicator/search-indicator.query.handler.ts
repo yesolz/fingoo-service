@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { SearchIndicatorQuery } from './search-indicator.query';
 import { SearchIndicatorBySymbolPort } from 'src/numerical-guidance/application/port/persistence/indicator/search-indicator-by-symbol.port';
-import { IndicatorDtoType } from 'src/utils/type/type-definition';
+import { IndicatorDtoType } from 'src/commons/type/type-definition';
 import { SearchIndicatorByTypeAndSymbolPort } from '../../../port/persistence/indicator/search-indicator-by-type-and-symbol.port';
 import { SearchEconomyIndicatorPort } from '../../../port/persistence/indicator/search-economy-indicator.port';
 

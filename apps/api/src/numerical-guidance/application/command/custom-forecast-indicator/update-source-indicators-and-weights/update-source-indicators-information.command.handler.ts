@@ -6,7 +6,7 @@ import { CustomForecastIndicator } from 'src/numerical-guidance/domain/custom-fo
 import { Transactional } from 'typeorm-transactional';
 import { LoadCustomForecastIndicatorPort } from '../../../port/persistence/custom-forecast-indicator/load-custom-forecast-indicator.port';
 import { LoadIndicatorPort } from 'src/numerical-guidance/application/port/persistence/indicator/load-indicator.port';
-import { IndicatorDtoType } from 'src/utils/type/type-definition';
+import { IndicatorDtoType } from 'src/commons/type/type-definition';
 
 @Injectable()
 @CommandHandler(UpdateSourceIndicatorsInformationCommand)

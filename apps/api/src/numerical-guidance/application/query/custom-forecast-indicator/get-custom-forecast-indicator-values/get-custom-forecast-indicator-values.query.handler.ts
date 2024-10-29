@@ -6,7 +6,7 @@ import {
   CustomForecastIndicatorValuesResponse,
   ForecastApiResponse,
   IndicatorType,
-} from 'src/utils/type/type-definition';
+} from 'src/commons/type/type-definition';
 import { LoadCustomForecastIndicatorPort } from '../../../port/persistence/custom-forecast-indicator/load-custom-forecast-indicator.port';
 import { CustomForecastIndicator } from 'src/numerical-guidance/domain/custom-forecast-indicator';
 import { LoadIndicatorPort } from '../../../port/persistence/indicator/load-indicator.port';
