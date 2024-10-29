@@ -1,8 +1,8 @@
 import { IsNumber, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { IndicatorType } from '../../../../utils/type/type-definition';
+import { IndicatorType } from '../../../../commons/type/type-definition';
 import { Type } from 'class-transformer';
-import { IsIndicatorType } from '../../../../utils/validation/is.indicator-type.validation';
+import { IsIndicatorType } from '../../../../commons/validation/is.indicator-type.validation';
 
 export class GetIndicatorListDto {
   @ApiProperty({

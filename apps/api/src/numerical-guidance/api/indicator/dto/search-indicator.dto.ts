@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsOptional, IsString } from 'class-validator';
-import { IndicatorType } from '../../../../utils/type/type-definition';
-import { IsIndicatorType } from '../../../../utils/validation/is.indicator-type.validation';
+import { IndicatorType } from '../../../../commons/type/type-definition';
+import { IsIndicatorType } from '../../../../commons/validation/is.indicator-type.validation';
 
 export type DEFAULT_INDICATOR_TYPE = 'none';
 

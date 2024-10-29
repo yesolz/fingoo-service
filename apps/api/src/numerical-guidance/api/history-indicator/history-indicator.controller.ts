@@ -1,10 +1,10 @@
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Controller, Get, Query } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
-import { ApiPaginatedResponseDecorator } from '../../../utils/pagination/api-paginated-response.decorator';
-import { ApiExceptionResponse } from '../../../utils/exception-filter/api-exception-response.decorator';
+import { ApiPaginatedResponseDecorator } from '../../../commons/pagination/api-paginated-response.decorator';
+import { ApiExceptionResponse } from '../../../commons/exception-filter/api-exception-response.decorator';
 import { GetHistoryIndicatorDto } from './dto/get-history-indicator.dto';
-import { CursorPageDto } from '../../../utils/pagination/cursor-page.dto';
+import { CursorPageDto } from '../../../commons/pagination/cursor-page.dto';
 import { HistoryIndicatorDto } from '../../application/query/history-indicator/get-history-indicator/dto/history-indicator.dto';
 import { GetHistoryIndicatorQuery } from '../../application/query/history-indicator/get-history-indicator/get-history-indicator.query';
 import { IndicatorValueSwaggerSchema } from '../../application/query/live-indicator/get-live-indicator/dto/base-live-indicator.dto';
