@@ -3,7 +3,7 @@ import { HttpStatus, INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { CqrsModule } from '@nestjs/cqrs';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { HttpExceptionFilter } from '../../../../utils/exception-filter/http-exception-filter';
+import { HttpExceptionFilter } from '../../../../commons/exception-filter/http-exception-filter';
 import { HttpModule } from '@nestjs/axios';
 import { IndicatorPersistentAdapter } from '../../../infrastructure/adapter/persistence/indicator/indicator.persistent.adapter';
 import { TypeOrmModule } from '@nestjs/typeorm';
