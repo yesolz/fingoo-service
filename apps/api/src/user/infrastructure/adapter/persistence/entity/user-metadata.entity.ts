@@ -4,57 +4,18 @@ import { PostEntity } from '../../../../../community/infrastructure/adapter/pers
 
 @Entity('user_metadatas')
 export class UserMetadataEntity extends BaseEntity {
-  @PrimaryGeneratedColumn('uuid') private _id: string;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-  @Column() private _userId: string;
+  @Column({ unique: true })
+  userId: string;
 
-  @Column() private _email: string;
+  @Column({ unique: true })
+  email: string;
 
-  @Column() private _username: string;
+  @Column()
+  username: string;
 
-  @OneToMany(() => PostEntity, (post) => post.user) private _posts: PostEntity[];
-
-  constructor() {
-    super();
-  }
-
-  get id(): string {
-    return this._id;
-  }
-
-  set id(value: string) {
-    this._id = value;
-  }
-
-  get userId(): string {
-    return this._userId;
-  }
-
-  set userId(value: string) {
-    this._userId = value;
-  }
-
-  get email(): string {
-    return this._email;
-  }
-
-  set email(value: string) {
-    this._email = value;
-  }
-
-  get username(): string {
-    return this._username;
-  }
-
-  set username(value: string) {
-    this._username = value;
-  }
-
-  get posts(): PostEntity[] {
-    return this._posts;
-  }
-
-  set posts(value: PostEntity[]) {
-    this._posts = value;
-  }
+  @OneToMany(() => PostEntity, (post) => post.user)
+  posts: PostEntity[];
 }
