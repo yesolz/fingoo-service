@@ -26,12 +26,15 @@ export const useIndicatorBoardMetadataList = () => {
   const { initIndicatorsInMetadataUnitType, updateIndicatorsInMetadataUnitType } = useIndicatorBoardMetadataStore(
     (state) => state.actions,
   );
+
   const isUnitTypeInitialized = useIndicatorBoardMetadataStore((state) => state.isUnitTypeInitialized);
 
   const convertedIndicatorBoardMetadataList = useMemo(() => {
     if (!indicatorBoardMetadataList) return undefined;
 
-    return convertIndicatorBoardMetadataList(indicatorBoardMetadataList);
+    return convertIndicatorBoardMetadataList(indicatorBoardMetadataList).sort((a, b) =>
+      new Date(a.updatedAt) > new Date(b.updatedAt) ? -1 : 1,
+    );
   }, [indicatorBoardMetadataList]);
 
   useEffect(() => {
