@@ -4,11 +4,15 @@ import { IndicatorBoardMetadataPersistentAdapter } from '../../../../infrastruct
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { IndicatorBoardMetadata } from '../../../../domain/indicator-board-metadata';
 import { IndicatorBoardMetadataEntity } from '../../../../infrastructure/adapter/persistence/indicator-board-metadata/entity/indicator-board-metadata.entity';
-import { MemberEntity } from '../../../../../auth/entity/member.entity';
+import { UserMetadataEntity } from '../../../../../user/infrastructure/adapter/persistence/entity/user-metadata.entity';
 import { PostgreSqlContainer } from '@testcontainers/postgresql';
-import { AuthService } from '../../../../../auth/application/auth.service';
 import { DataSource } from 'typeorm';
 import { BadRequestException, HttpStatus, NotFoundException } from '@nestjs/common';
+import { PostEntity } from '../../../../../community/infrastructure/adapter/persistence/entity/post.entity';
+import { mockUserMetadata1Entity } from '../../../../../user/test/data/mock-user.metadata1.entity';
+import { mockUserMetadata2Entity } from '../../../../../user/test/data/mock-user.metadata2.entity';
+import { mockUserMetadata3Entity } from '../../../../../user/test/data/mock-user.metadata3.entity';
+import { mockUserMetadata4Entity } from '../../../../../user/test/data/mock-user.metadata4.entity';
 
 jest.mock('typeorm-transactional', () => ({
   Transactional: () => () => ({}),
@@ -19,11 +23,11 @@ describe('IndicatorBoardMetadataPersistentAdapter', () => {
   let dataSource: DataSource;
   let indicatorBoardMetadataPersistentAdapter: IndicatorBoardMetadataPersistentAdapter;
   const seeding = async () => {
-    const memberRepository = dataSource.getRepository(MemberEntity);
-    await memberRepository.insert({ id: '10', email: 'test@gmail.com' });
-    await memberRepository.insert({ id: '5', email: 'test@gmail.com' });
-    await memberRepository.insert({ id: '999', email: 'test@gmail.com' });
-    await memberRepository.insert({ id: '9999', email: 'test@gmail.com' });
+    const memberRepository = dataSource.getRepository(UserMetadataEntity);
+    await memberRepository.insert(mockUserMetadata1Entity);
+    await memberRepository.insert(mockUserMetadata2Entity);
+    await memberRepository.insert(mockUserMetadata3Entity);
+    await memberRepository.insert(mockUserMetadata4Entity);
     memberRepository.save;
 
     const indicatorBoardMetadataRepository = dataSource.getRepository(IndicatorBoardMetadataEntity);
@@ -33,7 +37,7 @@ describe('IndicatorBoardMetadataPersistentAdapter', () => {
       indicatorInfos: [],
       customForecastIndicatorIds: [],
       sections: { section1: [] },
-      member: { id: '10', email: 'test@gmail.com' },
+      member: mockUserMetadata1Entity,
     });
 
     await indicatorBoardMetadataRepository.insert({
@@ -42,7 +46,7 @@ describe('IndicatorBoardMetadataPersistentAdapter', () => {
       indicatorInfos: [],
       customForecastIndicatorIds: [],
       sections: { section1: [] },
-      member: { id: '5', email: 'test@gmail.com' },
+      member: mockUserMetadata2Entity,
     });
 
     await indicatorBoardMetadataRepository.insert({
@@ -51,7 +55,7 @@ describe('IndicatorBoardMetadataPersistentAdapter', () => {
       indicatorInfos: [],
       customForecastIndicatorIds: [],
       sections: { section1: [] },
-      member: { id: '5', email: 'test@gmail.com' },
+      member: mockUserMetadata2Entity,
     });
 
     await indicatorBoardMetadataRepository.insert({
@@ -60,7 +64,7 @@ describe('IndicatorBoardMetadataPersistentAdapter', () => {
       indicatorInfos: [],
       customForecastIndicatorIds: [],
       sections: { section1: [] },
-      member: { id: '5', email: 'test@gmail.com' },
+      member: mockUserMetadata2Entity,
     });
 
     await indicatorBoardMetadataRepository.insert({
@@ -86,7 +90,7 @@ describe('IndicatorBoardMetadataPersistentAdapter', () => {
       sections: {
         section1: ['indicatorId1', 'indicatorId2', 'customForecastIndicatorId1', 'customForecastIndicatorId2'],
       },
-      member: { id: '999', email: 'test@gmail.com' },
+      member: mockUserMetadata3Entity,
     });
 
     await indicatorBoardMetadataRepository.insert({
@@ -112,7 +116,7 @@ describe('IndicatorBoardMetadataPersistentAdapter', () => {
       sections: {
         section1: ['indicatorId1', 'indicatorId2', 'customForecastIndicatorId1', 'customForecastIndicatorId2'],
       },
-      member: { id: '999', email: 'test@gmail.com' },
+      member: mockUserMetadata3Entity,
     });
 
     await indicatorBoardMetadataRepository.insert({
@@ -138,7 +142,7 @@ describe('IndicatorBoardMetadataPersistentAdapter', () => {
       sections: {
         section1: ['indicatorId1', 'indicatorId2', 'customForecastIndicatorId1', 'customForecastIndicatorId2'],
       },
-      member: { id: '999', email: 'test@gmail.com' },
+      member: mockUserMetadata3Entity,
     });
 
     await indicatorBoardMetadataRepository.insert({
@@ -147,7 +151,7 @@ describe('IndicatorBoardMetadataPersistentAdapter', () => {
       indicatorInfos: [],
       customForecastIndicatorIds: [],
       sections: { section1: [] },
-      member: { id: '9999', email: 'test@gmail.com' },
+      member: mockUserMetadata4Entity,
     });
 
     await indicatorBoardMetadataRepository.insert({
@@ -183,7 +187,7 @@ describe('IndicatorBoardMetadataPersistentAdapter', () => {
           'customForecastIndicatorId3',
         ],
       },
-      member: { id: '9999', email: 'test@gmail.com' },
+      member: mockUserMetadata4Entity,
     });
   };
 
@@ -195,7 +199,7 @@ describe('IndicatorBoardMetadataPersistentAdapter', () => {
         ConfigModule.forRoot({
           isGlobal: true,
         }),
-        TypeOrmModule.forFeature([MemberEntity, IndicatorBoardMetadataEntity]),
+        TypeOrmModule.forFeature([UserMetadataEntity, PostEntity, IndicatorBoardMetadataEntity]),
         TypeOrmModule.forRootAsync({
           imports: [ConfigModule],
           inject: [ConfigService],
@@ -208,12 +212,12 @@ describe('IndicatorBoardMetadataPersistentAdapter', () => {
             username: environment.getUsername(),
             password: environment.getPassword(),
             database: environment.getDatabase(),
-            entities: [IndicatorBoardMetadataEntity, MemberEntity],
+            entities: [IndicatorBoardMetadataEntity, UserMetadataEntity, PostEntity],
             synchronize: true,
           }),
         }),
       ],
-      providers: [IndicatorBoardMetadataPersistentAdapter, AuthService],
+      providers: [IndicatorBoardMetadataPersistentAdapter],
     }).compile();
     indicatorBoardMetadataPersistentAdapter = module.get(IndicatorBoardMetadataPersistentAdapter);
     dataSource = module.get<DataSource>(DataSource);
@@ -226,7 +230,7 @@ describe('IndicatorBoardMetadataPersistentAdapter', () => {
 
   it('지표보드 메타데이터 생성 확인', async () => {
     // given
-    const memberId = '10';
+    const memberId = mockUserMetadata1Entity.userId;
     const indicatorBoardMetaData: IndicatorBoardMetadata = IndicatorBoardMetadata.createNew('메타 데이터');
 
     // when
@@ -268,7 +272,7 @@ describe('IndicatorBoardMetadataPersistentAdapter', () => {
     // when
     const resultId = await indicatorBoardMetadataPersistentAdapter.createIndicatorBoardMetadata(
       indicatorBoardMetaData,
-      '10',
+      mockUserMetadata1Entity.userId,
     );
     const result = await indicatorBoardMetadataPersistentAdapter.loadIndicatorBoardMetadata(resultId);
 
@@ -379,7 +383,7 @@ describe('IndicatorBoardMetadataPersistentAdapter', () => {
 
   it('사용자 id로 메타데이터 리스트 가져오기.', async () => {
     // given
-    const memberId = 999;
+    const memberId = mockUserMetadata3Entity.userId;
 
     // when
     const result = await indicatorBoardMetadataPersistentAdapter.loadIndicatorBoardMetadataList(memberId);
