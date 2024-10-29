@@ -4,11 +4,14 @@ import { GetIndicatorBoardMetadataListQueryHandler } from 'src/numerical-guidanc
 import { PostgreSqlContainer } from '@testcontainers/postgresql';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { MemberEntity } from '../../../../../auth/entity/member.entity';
+import { UserMetadataEntity } from '../../../../../user/infrastructure/adapter/persistence/entity/user-metadata.entity';
 import { IndicatorBoardMetadataEntity } from '../../../../infrastructure/adapter/persistence/indicator-board-metadata/entity/indicator-board-metadata.entity';
-import { AuthService } from '../../../../../auth/application/auth.service';
 import { DataSource } from 'typeorm';
 import { BadRequestException, HttpStatus, NotFoundException } from '@nestjs/common';
+import { PostEntity } from '../../../../../community/infrastructure/adapter/persistence/entity/post.entity';
+import { mockUserMetadata1Entity } from '../../../../../user/test/data/mock-user.metadata1.entity';
+import { mockUserMetadata3Entity } from '../../../../../user/test/data/mock-user.metadata3.entity';
+import { mockUserMetadata2Entity } from '../../../../../user/test/data/mock-user.metadata2.entity';
 
 jest.mock('typeorm-transactional', () => ({
   Transactional: () => () => ({}),
@@ -20,11 +23,10 @@ describe('GetIndicatorBoardMetadataListQueryHandler', () => {
   let dataSource: DataSource;
 
   const seeding = async () => {
-    const memberRepository = dataSource.getRepository(MemberEntity);
-    await memberRepository.insert({ id: '10', email: 'test@gmail.com' });
-    await memberRepository.insert({ id: '5', email: 'test@gmail.com' });
-    await memberRepository.insert({ id: '999', email: 'test@gmail.com' });
-    memberRepository.save;
+    const memberRepository = dataSource.getRepository(UserMetadataEntity);
+    await memberRepository.insert(mockUserMetadata1Entity);
+    await memberRepository.insert(mockUserMetadata2Entity);
+    await memberRepository.insert(mockUserMetadata3Entity);
 
     const indicatorBoardMetadataRepository = dataSource.getRepository(IndicatorBoardMetadataEntity);
     await indicatorBoardMetadataRepository.insert({
@@ -33,7 +35,7 @@ describe('GetIndicatorBoardMetadataListQueryHandler', () => {
       indicatorInfos: [],
       customForecastIndicatorIds: [],
       sections: { section1: [] },
-      member: { id: '10', email: 'test@gmail.com' },
+      member: mockUserMetadata1Entity,
     });
     await indicatorBoardMetadataRepository.insert({
       id: '0d73cea1-35a5-432f-bcd1-27ae3541ba74',
@@ -41,7 +43,7 @@ describe('GetIndicatorBoardMetadataListQueryHandler', () => {
       indicatorInfos: [],
       customForecastIndicatorIds: [],
       sections: { section1: [] },
-      member: { id: '10', email: 'test@gmail.com' },
+      member: mockUserMetadata1Entity,
     });
   };
 
@@ -52,7 +54,7 @@ describe('GetIndicatorBoardMetadataListQueryHandler', () => {
         ConfigModule.forRoot({
           isGlobal: true,
         }),
-        TypeOrmModule.forFeature([MemberEntity, IndicatorBoardMetadataEntity]),
+        TypeOrmModule.forFeature([UserMetadataEntity, PostEntity, IndicatorBoardMetadataEntity]),
         TypeOrmModule.forRootAsync({
           imports: [ConfigModule],
           inject: [ConfigService],
@@ -65,12 +67,12 @@ describe('GetIndicatorBoardMetadataListQueryHandler', () => {
             username: environment.getUsername(),
             password: environment.getPassword(),
             database: environment.getDatabase(),
-            entities: [IndicatorBoardMetadataEntity, MemberEntity],
+            entities: [IndicatorBoardMetadataEntity, UserMetadataEntity, PostEntity],
             synchronize: true,
           }),
         }),
       ],
-      providers: [GetIndicatorBoardMetadataListQueryHandler, AuthService],
+      providers: [GetIndicatorBoardMetadataListQueryHandler],
     }).compile();
     getIndicatorBoardMetadataListQueryHandler = module.get(GetIndicatorBoardMetadataListQueryHandler);
     dataSource = module.get<DataSource>(DataSource);
@@ -83,7 +85,7 @@ describe('GetIndicatorBoardMetadataListQueryHandler', () => {
 
   it('사용자 id로 메타데이터 리스트 가져오기.', async () => {
     // given
-    const memberId = '10';
+    const memberId = mockUserMetadata1Entity.userId;
     const testQuery = new GetIndicatorBoardMetadataListQuery(memberId);
 
     // when

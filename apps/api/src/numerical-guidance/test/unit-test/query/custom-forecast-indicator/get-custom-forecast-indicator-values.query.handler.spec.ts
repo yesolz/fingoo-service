@@ -2,7 +2,7 @@ import { Test } from '@nestjs/testing';
 import { GetCustomForecastIndicatorValuesQuery } from 'src/numerical-guidance/application/query/custom-forecast-indicator/get-custom-forecast-indicator-values/get-custom-forecast-indicator-values.query';
 import { GetCustomForecastIndicatorValuesQueryHandler } from 'src/numerical-guidance/application/query/custom-forecast-indicator/get-custom-forecast-indicator-values/get-custom-forecast-indicator-values.query.handler';
 import { CustomForecastIndicator } from 'src/numerical-guidance/domain/custom-forecast-indicator';
-import { CustomForecastIndicatorValuesResponse } from 'src/utils/type/type-definition';
+import { CustomForecastIndicatorValuesResponse } from 'src/commons/type/type-definition';
 import { LoadIndicatorPort } from 'src/numerical-guidance/application/port/persistence/indicator/load-indicator.port';
 import { LoadCustomForecastIndicatorValuesPort } from 'src/numerical-guidance/application/port/persistence/custom-forecast-indicator/load-custom-forecast-indicator-values.port';
 import { LoadCustomForecastIndicatorPort } from 'src/numerical-guidance/application/port/persistence/custom-forecast-indicator/load-custom-forecast-indicator.port';

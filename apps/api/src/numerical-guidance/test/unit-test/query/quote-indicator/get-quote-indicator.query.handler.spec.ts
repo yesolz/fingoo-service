@@ -10,7 +10,7 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { ConfigModule } from '@nestjs/config';
 import { QuoteStockDto } from '../../../../application/query/quote-indicator/get-quote-indicator/dto/quote-stock.dto';
 import { GetQuoteIndicatorQuery } from '../../../../application/query/quote-indicator/get-quote-indicator/get-quote-indicator.query';
-import { IndicatorDtoType } from '../../../../../utils/type/type-definition';
+import { IndicatorDtoType } from '../../../../../commons/type/type-definition';
 import { IndicatorQuoteData } from '../../../../application/query/quote-indicator/get-quote-indicator/interface/quote-indicator-data.interface';
 
 const testData: QuoteStockDto = quoteIndicatorTestData1;
