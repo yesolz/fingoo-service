@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
-import { Interval } from '../../../../../utils/type/type-definition';
+import { Interval } from '../../../../../commons/type/type-definition';
 
 const BASE_URL = 'https://api.stlouisfed.org/fred';
 
