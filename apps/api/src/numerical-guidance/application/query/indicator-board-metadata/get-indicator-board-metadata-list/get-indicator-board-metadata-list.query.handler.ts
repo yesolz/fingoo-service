@@ -12,7 +12,7 @@ import { IndicatorBoardMetadataEntity } from '../../../../infrastructure/adapter
 import { IndicatorBoardMetadataMapper } from '../../../../infrastructure/adapter/persistence/indicator-board-metadata/mapper/indicator-board-metadata.mapper';
 import { QueryFailedError, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AuthService } from '../../../../../auth/application/auth.service';
+import { UserMetadataEntity } from '../../../../../user/infrastructure/adapter/persistence/entity/user-metadata.entity';
 
 @Injectable()
 @QueryHandler(GetIndicatorBoardMetadataListQuery)
@@ -20,12 +20,15 @@ export class GetIndicatorBoardMetadataListQueryHandler implements IQueryHandler 
   constructor(
     @InjectRepository(IndicatorBoardMetadataEntity)
     private readonly indicatorBoardMetadataRepository: Repository<IndicatorBoardMetadataEntity>,
-    private readonly authService: AuthService,
+    @InjectRepository(UserMetadataEntity)
+    private readonly userMetadataRepository: Repository<UserMetadataEntity>,
   ) {}
 
   async execute(query: GetIndicatorBoardMetadataListQuery): Promise<IndicatorBoardMetadata[]> {
     try {
-      const memberEntity = await this.authService.findById(query.memberId);
+      const memberEntity = await this.userMetadataRepository.findOne({
+        where: { userId: query.memberId },
+      });
       this.nullCheckForEntity(memberEntity);
 
       const indicatorBoardMetadataEntities: IndicatorBoardMetadataEntity[] =
