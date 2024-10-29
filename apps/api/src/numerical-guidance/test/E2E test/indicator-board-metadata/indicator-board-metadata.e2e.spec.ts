@@ -1,7 +1,7 @@
 import { HttpStatus, INestApplication, ValidationPipe } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import { IndicatorEntity } from '../../../infrastructure/adapter/persistence/indicator/entity/indicator.entity';
-import { MemberEntity } from '../../../../auth/entity/member.entity';
+import { UserMetadataEntity } from '../../../../user/infrastructure/adapter/persistence/entity/user-metadata.entity';
 import { IndicatorBoardMetadataEntity } from '../../../infrastructure/adapter/persistence/indicator-board-metadata/entity/indicator-board-metadata.entity';
 import { PostgreSqlContainer } from '@testcontainers/postgresql';
 import { Test } from '@nestjs/testing';
@@ -11,7 +11,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { HttpModule } from '@nestjs/axios';
 import { IndicatorBoardMetadataController } from '../../../api/indicator-board-metadata/indicator-board-metadata.controller';
 import { AdjustIndicatorValue } from '../../../util/adjust-indicator-value';
-import { AuthService } from '../../../../auth/application/auth.service';
 import { GetIndicatorBoardMetadataQueryHandler } from '../../../application/query/indicator-board-metadata/get-indicator-board-metadata/get-indicator-board-metadata.query.handler';
 import { InsertIndicatorIdCommandHandler } from '../../../application/command/indicator/insert-indicator-id/insert-indicator-id.command.handler';
 import { InsertCustomForecastIndicatorIdCommandHandler } from '../../../application/command/custom-forecast-indicator/insert-custom-forecast-indicator-id/insert-custom-forecast-indicator-id.command.handler';
@@ -20,8 +19,7 @@ import { DeleteIndicatorIdCommandHandler } from '../../../application/command/in
 import { DeleteIndicatorBoardMetadataCommandHandler } from '../../../application/command/indicator-board-metadata/delete-indicator-board-metadata/delete-indicator-board-metadata.command.handler';
 import { UpdateIndicatorBoardMetadataNameCommandHandler } from '../../../application/command/indicator-board-metadata/update-indicator-board-metadata-name/update-indicator-board-metadata-name.command.handler';
 import { IndicatorBoardMetadataPersistentAdapter } from '../../../infrastructure/adapter/persistence/indicator-board-metadata/indicator-board-metadata.persistent.adapter';
-import { of } from 'rxjs';
-import { HttpExceptionFilter } from '../../../../utils/exception-filter/http-exception-filter';
+import { HttpExceptionFilter } from '../../../../commons/exception-filter/http-exception-filter';
 import * as request from 'supertest';
 import { DeleteCustomForecastIndicatorIdCommandHandler } from 'src/numerical-guidance/application/command/custom-forecast-indicator/delete-custom-forecast-indicator-id/delete-custom-forecast-indicator-id.command.handler';
 import { FileSupabaseAdapter } from '../../../infrastructure/adapter/storage/supabase/file.supabase.adapter';
@@ -37,9 +35,14 @@ import { IndicesEntity } from '../../../infrastructure/adapter/persistence/indic
 import { StockEntity } from '../../../infrastructure/adapter/persistence/indicator/entity/stock.entity';
 import { TwelveApiManager } from '../../../infrastructure/adapter/twelve/util/twelve-api.manager';
 import { addTransactionalDataSource, initializeTransactionalContext } from 'typeorm-transactional';
-import { MockAuthGuard, mockAuthorization, mockUser } from '../../../../auth/test/data/mock-auth.guard';
 import { EconomyEntity } from '../../../infrastructure/adapter/persistence/indicator/entity/economy.entity';
 import { FredApiManager } from '../../../infrastructure/adapter/fred/util/fred-api.manager';
+import { PostEntity } from '../../../../community/infrastructure/adapter/persistence/entity/post.entity';
+import { mockSessionIntegration } from '../../../../user/test/data/mock-user.integration';
+import { mockSession1, mockUser1 } from '../../../../user/test/data/mock-user.user1';
+import { of } from 'rxjs';
+import { MockAuthGuard } from '../../../../user/test/data/mock-auth.guard';
+import { mockUserMetadata1Entity } from '../../../../user/test/data/mock-user.metadata1.entity';
 
 initializeTransactionalContext();
 
@@ -50,8 +53,8 @@ describe('Indicator Board Metadata E2E Test', () => {
   let fileSupabaseAdapter: FileSupabaseAdapter;
 
   const seeding = async () => {
-    const memberEntity = dataSource.getRepository(MemberEntity);
-    await memberEntity.insert({ id: '1', email: 'test@gmail.com' });
+    const userMetadataEntityRepository = dataSource.getRepository(UserMetadataEntity);
+    await userMetadataEntityRepository.insert(mockUserMetadata1Entity);
 
     const indicatorBoardMetadataRepository = dataSource.getRepository(IndicatorBoardMetadataEntity);
     await indicatorBoardMetadataRepository.insert({
@@ -67,7 +70,7 @@ describe('Indicator Board Metadata E2E Test', () => {
       ],
       customForecastIndicatorIds: ['customForecastIndicatorId1'],
       sections: { section1: ['a79eface-1fd3-4b85-92ae-9628d37951fb', 'customForecastIndicatorId1'] },
-      member: { id: '1', email: 'test@gmail.com' },
+      member: mockUserMetadata1Entity,
     });
 
     await indicatorBoardMetadataRepository.insert({
@@ -83,7 +86,7 @@ describe('Indicator Board Metadata E2E Test', () => {
       ],
       customForecastIndicatorIds: ['customForecastIndicatorId1'],
       sections: { section1: ['a79eface-1fd3-4b85-92ae-9628d37951fa', 'customForecastIndicatorId1'] },
-      member: { id: '1', email: 'test@gmail.com' },
+      member: mockUserMetadata1Entity,
     });
 
     const stockRepository = dataSource.getRepository(StockEntity);
@@ -125,7 +128,8 @@ describe('Indicator Board Metadata E2E Test', () => {
             isGlobal: true,
           }),
           TypeOrmModule.forFeature([
-            MemberEntity,
+            UserMetadataEntity,
+            PostEntity,
             IndicatorBoardMetadataEntity,
             BondsEntity,
             CryptoCurrenciesEntity,
@@ -150,7 +154,8 @@ describe('Indicator Board Metadata E2E Test', () => {
               database: DBenvironment.getDatabase(),
               entities: [
                 IndicatorBoardMetadataEntity,
-                MemberEntity,
+                UserMetadataEntity,
+                PostEntity,
                 IndicatorEntity,
                 BondsEntity,
                 CryptoCurrenciesEntity,
@@ -176,7 +181,6 @@ describe('Indicator Board Metadata E2E Test', () => {
           TwelveApiManager,
           FredApiManager,
           AdjustIndicatorValue,
-          AuthService,
           GetIndicatorBoardMetadataQueryHandler,
           InsertIndicatorIdCommandHandler,
           InsertCustomForecastIndicatorIdCommandHandler,
@@ -241,8 +245,8 @@ describe('Indicator Board Metadata E2E Test', () => {
             useValue: {
               canActivate: jest.fn().mockImplementation((context) => {
                 const request = context.switchToHttp().getRequest();
-                request.user = mockUser;
-                request.headers.authorization = mockAuthorization;
+                request.user = mockUser1;
+                request.headers.authorization = mockSession1;
                 return of(true);
               }),
             },
@@ -313,6 +317,7 @@ describe('Indicator Board Metadata E2E Test', () => {
     return request(app.getHttpServer())
       .get('/api/numerical-guidance/indicator-board-metadata')
       .set('Content-Type', 'application/json')
+      .set('Authorization', 'Bearer ' + mockSessionIntegration.access_token)
       .expect(HttpStatus.OK);
   });
 

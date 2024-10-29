@@ -1,6 +1,6 @@
 import { HttpStatus, INestApplication, ValidationPipe } from '@nestjs/common';
 import { DataSource } from 'typeorm';
-import { MemberEntity } from '../../../../auth/entity/member.entity';
+import { UserMetadataEntity } from '../../../../user/infrastructure/adapter/persistence/entity/user-metadata.entity';
 import { IndicatorBoardMetadataEntity } from '../../../infrastructure/adapter/persistence/indicator-board-metadata/entity/indicator-board-metadata.entity';
 import { CustomForecastIndicatorEntity } from '../../../infrastructure/adapter/persistence/custom-forecast-indicator/entity/custom-forecast-indicator.entity';
 import { PostgreSqlContainer } from '@testcontainers/postgresql';
@@ -10,14 +10,13 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { HttpModule } from '@nestjs/axios';
 import { CustomForecastIndicatorController } from '../../../api/custom-forecast-indicator/custom-forecast-indicator.controller';
-import { AuthService } from '../../../../auth/application/auth.service';
 import { InsertCustomForecastIndicatorIdCommandHandler } from '../../../application/command/custom-forecast-indicator/insert-custom-forecast-indicator-id/insert-custom-forecast-indicator-id.command.handler';
 import { CreateCustomForecastIndicatorCommandHandler } from '../../../application/command/custom-forecast-indicator/create-custom-forecast-indicator/create-custom-forecast-indicator.command.handler';
 import { GetCustomForecastIndicatorQueryHandler } from '../../../application/query/custom-forecast-indicator/get-custom-forecast-indicator/get-custom-forecast-indicator.query.handler';
 import { GetCustomForecastIndicatorsByMemberIdQueryHandler } from '../../../application/query/custom-forecast-indicator/get-custom-forecast-indicators-by-member-id/get-custom-forecast-indicators-by-member-id.query.handler';
 import { IndicatorBoardMetadataPersistentAdapter } from '../../../infrastructure/adapter/persistence/indicator-board-metadata/indicator-board-metadata.persistent.adapter';
 import { CustomForecastIndicatorPersistentAdapter } from '../../../infrastructure/adapter/persistence/custom-forecast-indicator/custom-forecast-indicator.persistent.adapter';
-import { HttpExceptionFilter } from '../../../../utils/exception-filter/http-exception-filter';
+import { HttpExceptionFilter } from '../../../../commons/exception-filter/http-exception-filter';
 import * as request from 'supertest';
 import { DeleteCustomForecastIndicatorCommandHandler } from 'src/numerical-guidance/application/command/custom-forecast-indicator/delete-custom-forecast-indicator/delete-custom-forecast-indicator.command.handler';
 import { UpdateCustomForecastIndicatorNameCommandHandler } from 'src/numerical-guidance/application/command/custom-forecast-indicator/update-custom-forecast-indicator-name/update-custom-forecast-indicator-name.command.handler';
@@ -33,15 +32,41 @@ import { FundEntity } from 'src/numerical-guidance/infrastructure/adapter/persis
 import { IndicesEntity } from 'src/numerical-guidance/infrastructure/adapter/persistence/indicator/entity/indices.entity';
 import { addTransactionalDataSource, initializeTransactionalContext } from 'typeorm-transactional';
 import { AdjustIndicatorValue } from 'src/numerical-guidance/util/adjust-indicator-value';
-import { AuthModule } from '../../../../auth/auth.module';
-import { SupabaseService } from '../../../../auth/supabase/supabase.service';
-import { SupabaseStrategy } from '../../../../auth/supabase/supabase.strategy';
-import { MockAuthGuard, mockAuthorization, mockUser } from '../../../../auth/test/data/mock-auth.guard';
-import { of } from 'rxjs';
+import { UserModule } from '../../../../user/user.module';
 import { EconomyEntity } from '../../../infrastructure/adapter/persistence/indicator/entity/economy.entity';
 import { FredApiManager } from '../../../infrastructure/adapter/fred/util/fred-api.manager';
+import { PostEntity } from '../../../../community/infrastructure/adapter/persistence/entity/post.entity';
+import { mockSession1, mockUser1 } from '../../../../user/test/data/mock-user.user1';
+import { of } from 'rxjs';
+import { mockSession2 } from '../../../../user/test/data/mock-user.user2';
+import { mockUserMetadata1Entity } from '../../../../user/test/data/mock-user.metadata1.entity';
+import { MockAuthGuard } from '../../../../user/test/data/mock-auth.guard';
 
 initializeTransactionalContext();
+
+const mockSupabaseClient = {
+  auth: {
+    getUser: jest.fn((token: string) => {
+      if (token === mockSession1.access_token) {
+        return Promise.resolve({ data: { user: mockUser1, session: mockSession1 }, error: null });
+      } else if (token === mockSession2.access_token) {
+        return Promise.resolve({ data: { user: null, session: null }, error: 'Invalid token' });
+      } else {
+        return Promise.resolve({ data: { user: null, session: null }, error: 'No token provided' });
+      }
+    }),
+  },
+};
+
+jest.mock('../../../../user/infrastructure/adapter/supabase/supabase.connection', () => {
+  return {
+    SupabaseConnection: jest.fn().mockImplementation(() => {
+      return {
+        connection: mockSupabaseClient,
+      };
+    }),
+  };
+});
 
 describe('Customer Forecast Indicator E2E Test', () => {
   let app: INestApplication;
@@ -49,8 +74,8 @@ describe('Customer Forecast Indicator E2E Test', () => {
   let DBenvironment;
 
   const seeding = async () => {
-    const memberEntity = dataSource.getRepository(MemberEntity);
-    await memberEntity.insert({ id: '1', email: 'test@gmail.com' });
+    const memberEntity = dataSource.getRepository(UserMetadataEntity);
+    await memberEntity.insert(mockUserMetadata1Entity);
 
     const stockRepository = dataSource.getRepository(StockEntity);
     await stockRepository.insert({
@@ -74,7 +99,7 @@ describe('Customer Forecast Indicator E2E Test', () => {
       customForecastIndicatorIds: [],
       createdAt: new Date('2024-02-23 10:00:02.292086'),
       updatedAt: new Date('2024-02-23 10:00:02.292086'),
-      member: { id: '1', email: 'test@gmail.com' },
+      member: mockUserMetadata1Entity,
     });
 
     const customForecastIndicatorEntity = dataSource.getRepository(CustomForecastIndicatorEntity);
@@ -98,7 +123,7 @@ describe('Customer Forecast Indicator E2E Test', () => {
       cointJohansenVerification: [],
       sourceIndicatorsInformation: [],
       sourceIndicators: [],
-      member: { id: '1', email: 'test@gmail.com' },
+      member: mockUserMetadata1Entity,
       createdAt: new Date('2024-02-23 10:00:02.292086'),
       updatedAt: new Date('2024-02-23 10:00:02.292086'),
     });
@@ -123,7 +148,7 @@ describe('Customer Forecast Indicator E2E Test', () => {
       cointJohansenVerification: [],
       sourceIndicatorsInformation: [],
       sourceIndicators: [],
-      member: { id: '1', email: 'test@gmail.com' },
+      member: mockUserMetadata1Entity,
       createdAt: new Date('2024-02-23 10:00:02.292086'),
       updatedAt: new Date('2024-02-23 10:00:02.292086'),
     });
@@ -148,7 +173,7 @@ describe('Customer Forecast Indicator E2E Test', () => {
       cointJohansenVerification: [],
       sourceIndicatorsInformation: [],
       sourceIndicators: [],
-      member: { id: '1', email: 'test@gmail.com' },
+      member: mockUserMetadata1Entity,
       createdAt: new Date('2024-02-23 10:00:02.292086'),
       updatedAt: new Date('2024-02-23 10:00:02.292086'),
     });
@@ -159,13 +184,14 @@ describe('Customer Forecast Indicator E2E Test', () => {
     const [module] = await Promise.all([
       Test.createTestingModule({
         imports: [
-          AuthModule,
+          UserModule,
           CqrsModule,
           ConfigModule.forRoot({
             isGlobal: true,
           }),
           TypeOrmModule.forFeature([
-            MemberEntity,
+            UserMetadataEntity,
+            PostEntity,
             IndicatorBoardMetadataEntity,
             CustomForecastIndicatorEntity,
             StockEntity,
@@ -191,7 +217,8 @@ describe('Customer Forecast Indicator E2E Test', () => {
               password: DBenvironment.getPassword(),
               database: DBenvironment.getDatabase(),
               entities: [
-                MemberEntity,
+                UserMetadataEntity,
+                PostEntity,
                 IndicatorBoardMetadataEntity,
                 CustomForecastIndicatorEntity,
                 StockEntity,
@@ -219,9 +246,6 @@ describe('Customer Forecast Indicator E2E Test', () => {
           TwelveApiManager,
           FredApiManager,
           AdjustIndicatorValue,
-          AuthService,
-          SupabaseService,
-          SupabaseStrategy,
           InsertCustomForecastIndicatorIdCommandHandler,
           CreateCustomForecastIndicatorCommandHandler,
           GetCustomForecastIndicatorQueryHandler,
@@ -265,8 +289,8 @@ describe('Customer Forecast Indicator E2E Test', () => {
             useValue: {
               canActivate: jest.fn().mockImplementation((context) => {
                 const request = context.switchToHttp().getRequest();
-                request.user = mockUser;
-                request.headers.authorization = mockAuthorization;
+                request.user = mockUser1;
+                request.headers.authorization = mockSession1;
                 return of(true);
               }),
             },
@@ -305,6 +329,7 @@ describe('Customer Forecast Indicator E2E Test', () => {
         targetIndicatorType: 'stocks',
       })
       .set('Content-Type', 'application/json')
+      .set('Authorization', 'Bearer ' + mockSession1.access_token)
       .expect(HttpStatus.CREATED);
   });
 
@@ -312,6 +337,7 @@ describe('Customer Forecast Indicator E2E Test', () => {
     return request(app.getHttpServer())
       .get('/api/numerical-guidance/custom-forecast-indicator/f5206520-da94-11ee-b91b-3551e6db3bbd')
       .set('Content-Type', 'application/json')
+      .set('Authorization', 'Bearer ' + mockSession1.access_token)
       .expect(HttpStatus.OK);
   });
 
@@ -319,6 +345,7 @@ describe('Customer Forecast Indicator E2E Test', () => {
     return request(app.getHttpServer())
       .get('/api/numerical-guidance/custom-forecast-indicator/f5206520-da94-11ee-b91b-3551e6db3bbc')
       .set('Content-Type', 'application/json')
+      .set('Authorization', 'Bearer ' + mockSession1.access_token)
       .expect(HttpStatus.NOT_FOUND);
   });
 
@@ -326,6 +353,7 @@ describe('Customer Forecast Indicator E2E Test', () => {
     return request(app.getHttpServer())
       .get('/api/numerical-guidance/custom-forecast-indicator/invaliduuid')
       .set('Content-Type', 'application/json')
+      .set('Authorization', 'Bearer ' + mockSession1.access_token)
       .expect(HttpStatus.BAD_REQUEST);
   });
 
@@ -333,6 +361,7 @@ describe('Customer Forecast Indicator E2E Test', () => {
     return request(app.getHttpServer())
       .get('/api/numerical-guidance/custom-forecast-indicator')
       .set('Content-Type', 'application/json')
+      .set('Authorization', 'Bearer ' + mockSession1.access_token)
       .expect(HttpStatus.OK);
   });
 
@@ -340,6 +369,7 @@ describe('Customer Forecast Indicator E2E Test', () => {
     return request(app.getHttpServer())
       .delete('/api/numerical-guidance/custom-forecast-indicator/f5206520-da94-11ee-b91b-3551e6db3100')
       .set('Content-Type', 'application/json')
+      .set('Authorization', 'Bearer ' + mockSession1.access_token)
       .expect(HttpStatus.OK);
   });
 
@@ -347,6 +377,7 @@ describe('Customer Forecast Indicator E2E Test', () => {
     return request(app.getHttpServer())
       .delete('/api/numerical-guidance/custom-forecast-indicator/f5206520-da94-11ee-b91b-3551e6db3999')
       .set('Content-Type', 'application/json')
+      .set('Authorization', 'Bearer ' + mockSession1.access_token)
       .expect(HttpStatus.NOT_FOUND);
   });
 
@@ -354,6 +385,7 @@ describe('Customer Forecast Indicator E2E Test', () => {
     return request(app.getHttpServer())
       .delete('/api/numerical-guidance/custom-forecast-indicator/invalid-id')
       .set('Content-Type', 'application/json')
+      .set('Authorization', 'Bearer ' + mockSession1.access_token)
       .expect(HttpStatus.BAD_REQUEST);
   });
 
@@ -364,6 +396,7 @@ describe('Customer Forecast Indicator E2E Test', () => {
         name: '수정후이름',
       })
       .set('Content-Type', 'application/json')
+      .set('Authorization', 'Bearer ' + mockSession1.access_token)
       .expect(HttpStatus.OK);
   });
 
@@ -374,6 +407,7 @@ describe('Customer Forecast Indicator E2E Test', () => {
         name: '수정후이름',
       })
       .set('Content-Type', 'application/json')
+      .set('Authorization', 'Bearer ' + mockSession1.access_token)
       .expect(HttpStatus.NOT_FOUND);
   });
 
@@ -384,6 +418,7 @@ describe('Customer Forecast Indicator E2E Test', () => {
         name: '수정후이름',
       })
       .set('Content-Type', 'application/json')
+      .set('Authorization', 'Bearer ' + mockSession1.access_token)
       .expect(HttpStatus.BAD_REQUEST);
   });
 
@@ -394,6 +429,7 @@ describe('Customer Forecast Indicator E2E Test', () => {
         name: '   ',
       })
       .set('Content-Type', 'application/json')
+      .set('Authorization', 'Bearer ' + mockSession1.access_token)
       .expect(HttpStatus.BAD_REQUEST);
   });
 });
