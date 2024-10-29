@@ -2,7 +2,7 @@
 
 // import { AdjustIndicatorValue } from '../../util/adjust-indicator-value';
 // import * as fs from 'fs';
-// import { IndicatorValue, Interval } from '../../../utils/type/type-definition';
+// import { IndicatorValue, Interval } from '../../../commons/type/type-definition';
 //
 // const filePath = './src/numerical-guidance/test/data/history-indicator.json';
 // const data = fs.readFileSync(filePath, 'utf8');

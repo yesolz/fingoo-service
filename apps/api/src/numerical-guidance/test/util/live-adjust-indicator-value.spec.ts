@@ -1,7 +1,7 @@
 import { LiveStockDto } from 'src/numerical-guidance/application/query/live-indicator/get-live-indicator/dto/live-stock.dto';
 import * as fs from 'fs';
 import { AdjustIndicatorValue } from '../../util/adjust-indicator-value';
-import { IndicatorValue } from '../../../utils/type/type-definition';
+import { IndicatorValue } from '../../../commons/type/type-definition';
 import { StockDto } from '../../application/query/indicator/get-indicator-list/dto/stock.dto';
 
 const filePath = './src/numerical-guidance/test/data/live-indicator-test-data-per-month.json';
