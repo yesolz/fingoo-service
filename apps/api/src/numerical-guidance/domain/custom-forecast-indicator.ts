@@ -1,11 +1,11 @@
-import { AggregateRoot } from 'src/utils/domain/aggregate-root';
+import { AggregateRoot } from 'src/commons/domain/aggregate-root';
 import { CustomForecastIndicatorNameShouldNotEmptyRule } from './rule/CustomForecastIndicatorNameShouldNotEmpty.rule';
 import {
   IndicatorDtoType,
   IndicatorType,
   SourceIndicatorInformation,
   Verification,
-} from 'src/utils/type/type-definition';
+} from 'src/commons/type/type-definition';
 import { ApiProperty } from '@nestjs/swagger';
 import { SourceIndicatorsShouldNotDuplicateRule } from './rule/SourceIndicatorsShouldNotDuplicate.rule';
 import { SourceIndicatorCountShouldNotExceedLimitRule } from './rule/SourceIndicatorCountShouldNotBeExeedLimit.rule';

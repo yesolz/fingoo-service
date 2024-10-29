@@ -1,5 +1,5 @@
-import { SourceIndicatorInformation } from 'src/utils/type/type-definition';
-import { BusinessRule } from '../../../utils/domain/business.rule';
+import { SourceIndicatorInformation } from 'src/commons/type/type-definition';
+import { BusinessRule } from '../../../commons/domain/business.rule';
 
 const INDICATOR_MAXIMUM = 10;
 
