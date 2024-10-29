@@ -13,7 +13,7 @@ import {
   IndicatorValue,
   Interval,
   LiveIndicatorDtoType,
-} from '../../../../utils/type/type-definition';
+} from '../../../../commons/type/type-definition';
 import { SearchTwelveIndicatorPort } from '../../../application/port/persistence/indicator/search-twelve-indicator.port';
 import {
   SearchedIndicatorsDto,
@@ -25,7 +25,7 @@ import { LoadLiveIndicatorPort } from '../../../application/port/external/twelve
 import { IndicatorTwelveMapper } from './mapper/indicator.twelve.mapper';
 import { LoadQuoteIndicatorPort } from '../../../application/port/external/twelve/load-quote-indicator.port';
 import { IndicatorQuoteData } from '../../../application/query/quote-indicator/get-quote-indicator/interface/quote-indicator-data.interface';
-import { QuoteIndicatorIntervalEnum } from '../../../../utils/enum/enum-definition';
+import { QuoteIndicatorIntervalEnum } from '../../../../commons/enum/enum-definition';
 import { QuoteIndicatorMapper } from './mapper/quote-indicator.mapper';
 
 @Injectable()

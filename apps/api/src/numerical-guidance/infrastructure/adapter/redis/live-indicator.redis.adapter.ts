@@ -4,7 +4,7 @@ import { CachingLiveIndicatorPort } from '../../../application/port/cache/cachin
 import { InjectRedis } from '@nestjs-modules/ioredis';
 import { Redis } from 'ioredis';
 import { LiveIndicatorMapper } from '../twelve/mapper/live-indicator.mapper';
-import { Interval, LiveIndicatorDtoType } from '../../../../utils/type/type-definition';
+import { Interval, LiveIndicatorDtoType } from '../../../../commons/type/type-definition';
 
 const SECONDS_IN_DAY = 86400;
 const DAYS_IN_WEEK = 7;

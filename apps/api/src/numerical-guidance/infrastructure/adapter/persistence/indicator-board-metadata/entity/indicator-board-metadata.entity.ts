@@ -1,5 +1,5 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { MemberEntity } from '../../../../../../auth/entity/member.entity';
+import { UserMetadataEntity } from '../../../../../../user/infrastructure/adapter/persistence/entity/user-metadata.entity';
 import { BaseEntity } from '../../base.entity';
 import { IndicatorInfo } from '../../../../../domain/indicator-board-metadata';
 
@@ -20,6 +20,6 @@ export class IndicatorBoardMetadataEntity extends BaseEntity {
   @Column({ type: 'hstore', nullable: true })
   sections: Record<string, string[]>;
 
-  @ManyToOne(() => MemberEntity, { eager: false })
-  member: MemberEntity;
+  @ManyToOne(() => UserMetadataEntity, { eager: false })
+  member: UserMetadataEntity;
 }

@@ -1,9 +1,9 @@
 import { IndicatorBoardMetadataEntity } from '../entity/indicator-board-metadata.entity';
 import { IndicatorBoardMetadata } from '../../../../../domain/indicator-board-metadata';
-import { MemberEntity } from '../../../../../../auth/entity/member.entity';
+import { UserMetadataEntity } from '../../../../../../user/infrastructure/adapter/persistence/entity/user-metadata.entity';
 
 export class IndicatorBoardMetadataMapper {
-  static mapDomainToNewEntity(indicatorBoardMetaData: IndicatorBoardMetadata, member: MemberEntity) {
+  static mapDomainToNewEntity(indicatorBoardMetaData: IndicatorBoardMetadata, member: UserMetadataEntity) {
     const indicatorBoardMetadataEntity: IndicatorBoardMetadataEntity = new IndicatorBoardMetadataEntity();
     indicatorBoardMetadataEntity.indicatorBoardMetadataName = indicatorBoardMetaData.indicatorBoardMetadataName;
     indicatorBoardMetadataEntity.indicatorInfos = indicatorBoardMetaData.indicatorInfos;

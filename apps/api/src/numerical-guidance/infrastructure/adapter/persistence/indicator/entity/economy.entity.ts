@@ -1,5 +1,5 @@
 import { Column, Entity } from 'typeorm';
-import { IndicatorType } from '../../../../../../utils/type/type-definition';
+import { IndicatorType } from '../../../../../../commons/type/type-definition';
 import { BaseIndicatorEntity } from './base-indicator.entity';
 
 @Entity({ name: 'economy' })

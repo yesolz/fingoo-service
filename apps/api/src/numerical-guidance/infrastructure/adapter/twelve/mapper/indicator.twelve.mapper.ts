@@ -1,4 +1,4 @@
-import { LiveIndicatorDtoType } from '../../../../../utils/type/type-definition';
+import { LiveIndicatorDtoType } from '../../../../../commons/type/type-definition';
 import { LiveEtfDto } from '../../../../application/query/live-indicator/get-live-indicator/dto/live-etf.dto';
 import { LiveIndicesDto } from '../../../../application/query/live-indicator/get-live-indicator/dto/live-indices.dto';
 import { LiveStockDto } from '../../../../application/query/live-indicator/get-live-indicator/dto/live-stock.dto';

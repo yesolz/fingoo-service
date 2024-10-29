@@ -1,8 +1,8 @@
 import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
-import { IndicatorType, Interval } from '../../../../../utils/type/type-definition';
+import { IndicatorType, Interval } from '../../../../../commons/type/type-definition';
 import * as process from 'process';
-import { QuoteIndicatorIntervalEnum } from '../../../../../utils/enum/enum-definition';
+import { QuoteIndicatorIntervalEnum } from '../../../../../commons/enum/enum-definition';
 
 const BASE_URL = 'https://api.twelvedata.com';
 
