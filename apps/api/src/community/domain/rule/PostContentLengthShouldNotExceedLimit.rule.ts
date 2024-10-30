@@ -1,4 +1,4 @@
-import { BusinessRule } from 'src/utils/domain/business.rule';
+import { BusinessRule } from 'src/commons/domain/business.rule';
 
 export const CONTENT_LIMIT_RULE = 400;
 

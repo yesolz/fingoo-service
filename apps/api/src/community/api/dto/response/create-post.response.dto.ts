@@ -40,7 +40,7 @@ export class CreatePostResponseDto {
   @IsDate()
   @IsString()
   @IsNotEmpty()
-  readonly createAt: string;
+  readonly createdAt: string;
 
   @ApiProperty({
     example: '2024-10-02',
@@ -49,5 +49,13 @@ export class CreatePostResponseDto {
   @IsDate()
   @IsString()
   @IsNotEmpty()
-  readonly updateAt: string;
+  readonly updatedAt: string;
+
+  constructor(postId: string, content: string, author: string, createdAt: string, updatedAt: string) {
+    this.postId = postId;
+    this.content = content;
+    this.author = author;
+    this.createdAt = createdAt;
+    this.updatedAt = updatedAt;
+  }
 }
