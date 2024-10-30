@@ -41,7 +41,7 @@ import { mockSessionIntegration } from '../../../../user/test/data/mock-user.int
 import { mockSession1, mockUser1 } from '../../../../user/test/data/mock-user.user1';
 import { of } from 'rxjs';
 import { MockAuthGuard } from '../../../../user/test/data/mock-auth.guard';
-import { mockUserMetadata1Entity } from '../../../../user/test/data/mock-user.metadata1.entity';
+import { mockUserMetadataData1 } from '../../../../user/test/data/mock-user.metadata.data1';
 
 initializeTransactionalContext();
 
@@ -53,7 +53,7 @@ describe('Indicator Board Metadata E2E Test', () => {
 
   const seeding = async () => {
     const userMetadataEntityRepository = dataSource.getRepository(UserMetadataEntity);
-    await userMetadataEntityRepository.insert(mockUserMetadata1Entity);
+    await userMetadataEntityRepository.insert(mockUserMetadataData1);
 
     const indicatorBoardMetadataRepository = dataSource.getRepository(IndicatorBoardMetadataEntity);
     await indicatorBoardMetadataRepository.insert({
@@ -69,7 +69,7 @@ describe('Indicator Board Metadata E2E Test', () => {
       ],
       customForecastIndicatorIds: ['customForecastIndicatorId1'],
       sections: { section1: ['a79eface-1fd3-4b85-92ae-9628d37951fb', 'customForecastIndicatorId1'] },
-      member: mockUserMetadata1Entity,
+      member: mockUserMetadataData1,
     });
 
     await indicatorBoardMetadataRepository.insert({
@@ -85,7 +85,7 @@ describe('Indicator Board Metadata E2E Test', () => {
       ],
       customForecastIndicatorIds: ['customForecastIndicatorId1'],
       sections: { section1: ['a79eface-1fd3-4b85-92ae-9628d37951fa', 'customForecastIndicatorId1'] },
-      member: mockUserMetadata1Entity,
+      member: mockUserMetadataData1,
     });
 
     const stockRepository = dataSource.getRepository(StockEntity);

@@ -1,22 +1,22 @@
 import { UserMetadataMapper } from '../../../../user/infrastructure/adapter/persistence/mapper/user-metadata.mapper';
-import { mockUserMetadata1Entity } from '../../../../user/test/data/mock-user.metadata1.entity';
+import { mockUserMetadataData1 } from '../../../../user/test/data/mock-user.metadata.data1';
 import { PostMapper } from '../../../infrastructure/adapter/persistence/mapper/post.mapper';
-import { mockPost1Entity } from '../../data/mock-post1.entity';
+import { mockPostData1 } from '../../data/mock-post.data1';
 import { CONTENT_LIMIT_RULE } from '../../../domain/rule/PostContentLengthShouldNotExceedLimit.rule';
 import { PostDomain } from '../../../domain/post.domain';
 import { LIMITCONTENT } from '../../data/limit.content';
 
 describe('PostDomain', () => {
-  const userMetadataDomain = UserMetadataMapper.mapEntityToDomain(mockUserMetadata1Entity);
+  const userMetadataDomain = UserMetadataMapper.mapEntityToDomain(mockUserMetadataData1);
 
   it('should create an instance of PostDomain', () => {
-    const postDomain = PostMapper.mapEntityToDomain(mockPost1Entity, mockUserMetadata1Entity);
+    const postDomain = PostMapper.mapEntityToDomain(mockPostData1, mockUserMetadataData1);
 
     expect(postDomain).toBeInstanceOf(PostDomain);
-    expect(postDomain.id).toBe(mockPost1Entity.id);
+    expect(postDomain.id).toBe(mockPostData1.id);
     expect(postDomain.userMetadataDomain).toStrictEqual(userMetadataDomain);
-    expect(postDomain.content).toBe(mockPost1Entity.content);
-    expect(postDomain.viewCount).toBe(mockPost1Entity.viewCount);
+    expect(postDomain.content).toBe(mockPostData1.content);
+    expect(postDomain.viewCount).toBe(mockPostData1.viewCount);
     expect(postDomain.createdAt).toBeInstanceOf(Date);
     expect(postDomain.updatedAt).toBeInstanceOf(Date);
   });

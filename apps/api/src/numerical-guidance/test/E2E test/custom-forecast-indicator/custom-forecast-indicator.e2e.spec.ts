@@ -38,7 +38,7 @@ import { FredApiManager } from '../../../infrastructure/adapter/fred/util/fred-a
 import { mockSession1, mockUser1 } from '../../../../user/test/data/mock-user.user1';
 import { of } from 'rxjs';
 import { mockSession2 } from '../../../../user/test/data/mock-user.user2';
-import { mockUserMetadata1Entity } from '../../../../user/test/data/mock-user.metadata1.entity';
+import { mockUserMetadataData1 } from '../../../../user/test/data/mock-user.metadata.data1';
 import { MockAuthGuard } from '../../../../user/test/data/mock-auth.guard';
 
 initializeTransactionalContext();
@@ -74,7 +74,7 @@ describe('Customer Forecast Indicator E2E Test', () => {
 
   const seeding = async () => {
     const memberEntity = dataSource.getRepository(UserMetadataEntity);
-    await memberEntity.insert(mockUserMetadata1Entity);
+    await memberEntity.insert(mockUserMetadataData1);
 
     const stockRepository = dataSource.getRepository(StockEntity);
     await stockRepository.insert({
@@ -98,7 +98,7 @@ describe('Customer Forecast Indicator E2E Test', () => {
       customForecastIndicatorIds: [],
       createdAt: new Date('2024-02-23 10:00:02.292086'),
       updatedAt: new Date('2024-02-23 10:00:02.292086'),
-      member: mockUserMetadata1Entity,
+      member: mockUserMetadataData1,
     });
 
     const customForecastIndicatorEntity = dataSource.getRepository(CustomForecastIndicatorEntity);
@@ -122,7 +122,7 @@ describe('Customer Forecast Indicator E2E Test', () => {
       cointJohansenVerification: [],
       sourceIndicatorsInformation: [],
       sourceIndicators: [],
-      member: mockUserMetadata1Entity,
+      member: mockUserMetadataData1,
       createdAt: new Date('2024-02-23 10:00:02.292086'),
       updatedAt: new Date('2024-02-23 10:00:02.292086'),
     });
@@ -147,7 +147,7 @@ describe('Customer Forecast Indicator E2E Test', () => {
       cointJohansenVerification: [],
       sourceIndicatorsInformation: [],
       sourceIndicators: [],
-      member: mockUserMetadata1Entity,
+      member: mockUserMetadataData1,
       createdAt: new Date('2024-02-23 10:00:02.292086'),
       updatedAt: new Date('2024-02-23 10:00:02.292086'),
     });
@@ -172,7 +172,7 @@ describe('Customer Forecast Indicator E2E Test', () => {
       cointJohansenVerification: [],
       sourceIndicatorsInformation: [],
       sourceIndicators: [],
-      member: mockUserMetadata1Entity,
+      member: mockUserMetadataData1,
       createdAt: new Date('2024-02-23 10:00:02.292086'),
       updatedAt: new Date('2024-02-23 10:00:02.292086'),
     });

@@ -8,9 +8,9 @@ import { UserMetadataEntity } from '../../../../../user/infrastructure/adapter/p
 import { IndicatorBoardMetadataEntity } from '../../../../infrastructure/adapter/persistence/indicator-board-metadata/entity/indicator-board-metadata.entity';
 import { DataSource } from 'typeorm';
 import { BadRequestException, HttpStatus, NotFoundException } from '@nestjs/common';
-import { mockUserMetadata1Entity } from '../../../../../user/test/data/mock-user.metadata1.entity';
-import { mockUserMetadata3Entity } from '../../../../../user/test/data/mock-user.metadata3.entity';
-import { mockUserMetadata2Entity } from '../../../../../user/test/data/mock-user.metadata2.entity';
+import { mockUserMetadataData1 } from '../../../../../user/test/data/mock-user.metadata.data1';
+import { mockUserMetadataData3 } from '../../../../../user/test/data/mock-user.metadata.data3';
+import { mockUserMetadataData2 } from '../../../../../user/test/data/mock-user.metadata.data2';
 
 jest.mock('typeorm-transactional', () => ({
   Transactional: () => () => ({}),
@@ -23,9 +23,9 @@ describe('GetIndicatorBoardMetadataListQueryHandler', () => {
 
   const seeding = async () => {
     const memberRepository = dataSource.getRepository(UserMetadataEntity);
-    await memberRepository.insert(mockUserMetadata1Entity);
-    await memberRepository.insert(mockUserMetadata2Entity);
-    await memberRepository.insert(mockUserMetadata3Entity);
+    await memberRepository.insert(mockUserMetadataData1);
+    await memberRepository.insert(mockUserMetadataData2);
+    await memberRepository.insert(mockUserMetadataData3);
 
     const indicatorBoardMetadataRepository = dataSource.getRepository(IndicatorBoardMetadataEntity);
     await indicatorBoardMetadataRepository.insert({
@@ -34,7 +34,7 @@ describe('GetIndicatorBoardMetadataListQueryHandler', () => {
       indicatorInfos: [],
       customForecastIndicatorIds: [],
       sections: { section1: [] },
-      member: mockUserMetadata1Entity,
+      member: mockUserMetadataData1,
     });
     await indicatorBoardMetadataRepository.insert({
       id: '0d73cea1-35a5-432f-bcd1-27ae3541ba74',
@@ -42,7 +42,7 @@ describe('GetIndicatorBoardMetadataListQueryHandler', () => {
       indicatorInfos: [],
       customForecastIndicatorIds: [],
       sections: { section1: [] },
-      member: mockUserMetadata1Entity,
+      member: mockUserMetadataData1,
     });
   };
 
@@ -84,7 +84,7 @@ describe('GetIndicatorBoardMetadataListQueryHandler', () => {
 
   it('사용자 id로 메타데이터 리스트 가져오기.', async () => {
     // given
-    const memberId = mockUserMetadata1Entity.userId;
+    const memberId = mockUserMetadataData1.userId;
     const testQuery = new GetIndicatorBoardMetadataListQuery(memberId);
 
     // when

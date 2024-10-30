@@ -1,5 +1,5 @@
-import { mockPost1Entity } from '../../data/mock-post1.entity';
-import { mockUserMetadata1Entity } from '../../../../user/test/data/mock-user.metadata1.entity';
+import { mockPostData1 } from '../../data/mock-post.data1';
+import { mockUserMetadataData1 } from '../../../../user/test/data/mock-user.metadata.data1';
 import { PostDomain } from '../../../domain/post.domain';
 import { PostMapper } from '../../../infrastructure/adapter/persistence/mapper/post.mapper';
 import { UserMetadataDomain } from '../../../../user/domain/user-metadata.domain';
@@ -8,8 +8,8 @@ import { UpdatePostResponseDto } from '../../../api/dto/response/update-post.res
 import { UserMetadataMapper } from '../../../../user/infrastructure/adapter/persistence/mapper/user-metadata.mapper';
 
 describe('PostMapper', () => {
-  const postEntity = mockPost1Entity;
-  const userMetadataEntity = mockUserMetadata1Entity;
+  const postEntity = mockPostData1;
+  const userMetadataEntity = mockUserMetadataData1;
   const userMetadataDomain = new UserMetadataDomain(
     userMetadataEntity.id,
     userMetadataEntity.userId,

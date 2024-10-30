@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
-import { BaseEntity } from '../../../../../commons/entity/base.entity';
+import { BaseEntity } from './common/base.entity';
 
 @Entity('user_metadatas')
 export class UserMetadataEntity extends BaseEntity {
