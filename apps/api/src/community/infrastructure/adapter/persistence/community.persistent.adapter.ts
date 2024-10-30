@@ -1,4 +1,4 @@
-import { HttpStatus, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { BadRequestException, HttpStatus, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { PostEntity } from './entity/post.entity';
 import { CreatePostPort } from '../../../application/port/persistence/post/create-post.port';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -29,8 +29,8 @@ export class CommunityPersistentAdapter implements CreatePostPort {
       return PostMapper.mapEntityToDomain(postEntity, userMetadataEntity);
     } catch (error) {
       if (error instanceof BusinessRuleValidationException) {
-        throw new BusinessRuleValidationException({
-          HttpStatus: HttpStatus.INTERNAL_SERVER_ERROR,
+        throw new BadRequestException({
+          HttpStatus: HttpStatus.BAD_REQUEST,
           error: '[ERROR] 비즈니스 룰에 어긋난 행위 감지',
           message: error.message,
           cause: error.message,
@@ -46,19 +46,11 @@ export class CommunityPersistentAdapter implements CreatePostPort {
     }
   }
 
-  // async updatePost(postEntity: PostEntity): Promise<PostEntity> {
-  //   const existingPost = await this.postEntityRepository.findOne({ where: { id: postEntity.id } });
-  //   if (!existingPost) {
-  //     throw new NotFoundException(`Post with ID ${postEntity.id} not found`);
-  //   }
-  //   return this.postEntityRepository.save(postEntity);
+  // async updatePost(postId, content, userId): Promise<PostDomain> {
+  //   throw new HttpException('Not Implemented', HttpStatus.NOT_IMPLEMENTED);
   // }
   //
-  // async deletePost(postEntity: PostEntity): Promise<PostEntity> {
-  //   const existingPost = await this.postEntityRepository.findOne({ where: { id: postEntity.id } });
-  //   if (!existingPost) {
-  //     throw new NotFoundException(`Post with ID ${postEntity.id} not found`);
-  //   }
-  //   return this.postEntityRepository.remove(existingPost);
+  // async deletePost(postId, userId): Promise<boolean> {
+  //   throw new HttpException('Not Implemented', HttpStatus.NOT_IMPLEMENTED);
   // }
 }

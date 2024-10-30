@@ -1,5 +1,3 @@
-import { PostEntity } from '../../../../infrastructure/adapter/persistence/entity/post.entity';
-
-export class DeletePostPort {
-  deletePost(postEntity: PostEntity): Promise<PostEntity>;
-}
+// export class DeletePostPort {
+//   deletePost(postId, userId): Promise<boolean>;
+// }

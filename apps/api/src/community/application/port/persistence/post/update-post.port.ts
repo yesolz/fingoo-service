@@ -1,5 +1,5 @@
-import { PostEntity } from '../../../../infrastructure/adapter/persistence/entity/post.entity';
-
-export class UpdatePostPort {
-  updatePost(postEntity: PostEntity): Promise<PostEntity>;
-}
+// import { PostDomain } from '../../../../domain/post.domain';
+//
+// export class UpdatePostPort {
+//   updatePost(postId, content, userId): Promise<PostDomain>;
+// }
