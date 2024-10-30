@@ -10,7 +10,6 @@ import { BadRequestException } from '@nestjs/common';
 import { mockUser2 } from '../../../data/mock-user.user2';
 import { UserMetadataDomain } from '../../../../domain/user-metadata.domain';
 import { Test } from '@nestjs/testing';
-import { PostEntity } from '../../../../../community/infrastructure/adapter/persistence/entity/post.entity';
 
 const USERNAME = 'testName';
 
@@ -42,7 +41,7 @@ describe('UserPersistentAdapter', () => {
             maxRedirects: 5,
           }),
         }),
-        TypeOrmModule.forFeature([UserMetadataEntity, PostEntity]),
+        TypeOrmModule.forFeature([UserMetadataEntity]),
         TypeOrmModule.forRootAsync({
           imports: [ConfigModule.forRoot()],
           inject: [ConfigService],
@@ -55,7 +54,7 @@ describe('UserPersistentAdapter', () => {
             username: environment.getUsername(),
             password: environment.getPassword(),
             database: environment.getDatabase(),
-            entities: [UserMetadataEntity, PostEntity],
+            entities: [UserMetadataEntity],
             synchronize: true,
           }),
         }),

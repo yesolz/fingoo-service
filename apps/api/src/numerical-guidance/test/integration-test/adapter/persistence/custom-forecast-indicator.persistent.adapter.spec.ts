@@ -12,7 +12,6 @@ import { DataSource } from 'typeorm';
 import { IndicatorEntity } from 'src/numerical-guidance/infrastructure/adapter/persistence/indicator/entity/indicator.entity';
 import { IndicatorBoardMetadataEntity } from 'src/numerical-guidance/infrastructure/adapter/persistence/indicator-board-metadata/entity/indicator-board-metadata.entity';
 import { IndicatorBoardMetadataPersistentAdapter } from 'src/numerical-guidance/infrastructure/adapter/persistence/indicator-board-metadata/indicator-board-metadata.persistent.adapter';
-import { PostEntity } from '../../../../../community/infrastructure/adapter/persistence/entity/post.entity';
 
 jest.mock('typeorm-transactional', () => ({
   Transactional: () => () => ({}),
@@ -170,7 +169,6 @@ describe('CustomForecastIndicatorPersistentAdapter', () => {
         TypeOrmModule.forFeature([
           CustomForecastIndicatorEntity,
           UserMetadataEntity,
-          PostEntity,
           IndicatorEntity,
           IndicatorBoardMetadataEntity,
         ]),
@@ -189,7 +187,6 @@ describe('CustomForecastIndicatorPersistentAdapter', () => {
             entities: [
               CustomForecastIndicatorEntity,
               UserMetadataEntity,
-              PostEntity,
               IndicatorEntity,
               IndicatorBoardMetadataEntity,
             ],

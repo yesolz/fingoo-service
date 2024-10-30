@@ -10,7 +10,6 @@ describe('UserMetadataMapper', () => {
     'user-uuid',
     'test@example.com',
     'testuser',
-    [],
   );
 
   const mockUserMetadataEntity = new UserMetadataEntity();
@@ -18,7 +17,6 @@ describe('UserMetadataMapper', () => {
   mockUserMetadataEntity.username = 'testuser';
   mockUserMetadataEntity.userId = 'user-uuid';
   mockUserMetadataEntity.email = 'test@example.com';
-  mockUserMetadataEntity.posts = [];
   mockUserMetadataEntity.updatedAt = new Date();
   mockUserMetadataEntity.createdAt = new Date();
 

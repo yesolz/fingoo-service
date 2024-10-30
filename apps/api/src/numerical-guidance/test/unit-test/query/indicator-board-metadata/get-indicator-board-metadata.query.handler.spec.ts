@@ -8,7 +8,6 @@ import { PostgreSqlContainer } from '@testcontainers/postgresql';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
-import { PostEntity } from '../../../../../community/infrastructure/adapter/persistence/entity/post.entity';
 
 jest.mock('typeorm-transactional', () => ({
   Transactional: () => () => ({}),
@@ -43,7 +42,7 @@ describe('GetIndicatorBoardMetadataQueryHandler', () => {
         ConfigModule.forRoot({
           isGlobal: true,
         }),
-        TypeOrmModule.forFeature([UserMetadataEntity, PostEntity, IndicatorBoardMetadataEntity]),
+        TypeOrmModule.forFeature([UserMetadataEntity, IndicatorBoardMetadataEntity]),
         TypeOrmModule.forRootAsync({
           imports: [ConfigModule],
           inject: [ConfigService],
@@ -56,7 +55,7 @@ describe('GetIndicatorBoardMetadataQueryHandler', () => {
             username: environment.getUsername(),
             password: environment.getPassword(),
             database: environment.getDatabase(),
-            entities: [IndicatorBoardMetadataEntity, UserMetadataEntity, PostEntity],
+            entities: [IndicatorBoardMetadataEntity, UserMetadataEntity],
             synchronize: true,
           }),
         }),

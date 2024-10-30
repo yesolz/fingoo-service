@@ -35,7 +35,6 @@ import { AdjustIndicatorValue } from 'src/numerical-guidance/util/adjust-indicat
 import { UserModule } from '../../../../user/user.module';
 import { EconomyEntity } from '../../../infrastructure/adapter/persistence/indicator/entity/economy.entity';
 import { FredApiManager } from '../../../infrastructure/adapter/fred/util/fred-api.manager';
-import { PostEntity } from '../../../../community/infrastructure/adapter/persistence/entity/post.entity';
 import { mockSession1, mockUser1 } from '../../../../user/test/data/mock-user.user1';
 import { of } from 'rxjs';
 import { mockSession2 } from '../../../../user/test/data/mock-user.user2';
@@ -191,7 +190,6 @@ describe('Customer Forecast Indicator E2E Test', () => {
           }),
           TypeOrmModule.forFeature([
             UserMetadataEntity,
-            PostEntity,
             IndicatorBoardMetadataEntity,
             CustomForecastIndicatorEntity,
             StockEntity,
@@ -218,7 +216,6 @@ describe('Customer Forecast Indicator E2E Test', () => {
               database: DBenvironment.getDatabase(),
               entities: [
                 UserMetadataEntity,
-                PostEntity,
                 IndicatorBoardMetadataEntity,
                 CustomForecastIndicatorEntity,
                 StockEntity,

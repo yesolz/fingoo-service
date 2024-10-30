@@ -8,7 +8,6 @@ import { UserMetadataEntity } from '../../../../../user/infrastructure/adapter/p
 import { PostgreSqlContainer } from '@testcontainers/postgresql';
 import { DataSource } from 'typeorm';
 import { BadRequestException, HttpStatus, NotFoundException } from '@nestjs/common';
-import { PostEntity } from '../../../../../community/infrastructure/adapter/persistence/entity/post.entity';
 import { mockUserMetadata1Entity } from '../../../../../user/test/data/mock-user.metadata1.entity';
 import { mockUserMetadata2Entity } from '../../../../../user/test/data/mock-user.metadata2.entity';
 import { mockUserMetadata3Entity } from '../../../../../user/test/data/mock-user.metadata3.entity';
@@ -199,7 +198,7 @@ describe('IndicatorBoardMetadataPersistentAdapter', () => {
         ConfigModule.forRoot({
           isGlobal: true,
         }),
-        TypeOrmModule.forFeature([UserMetadataEntity, PostEntity, IndicatorBoardMetadataEntity]),
+        TypeOrmModule.forFeature([UserMetadataEntity, IndicatorBoardMetadataEntity]),
         TypeOrmModule.forRootAsync({
           imports: [ConfigModule],
           inject: [ConfigService],
@@ -212,7 +211,7 @@ describe('IndicatorBoardMetadataPersistentAdapter', () => {
             username: environment.getUsername(),
             password: environment.getPassword(),
             database: environment.getDatabase(),
-            entities: [IndicatorBoardMetadataEntity, UserMetadataEntity, PostEntity],
+            entities: [IndicatorBoardMetadataEntity, UserMetadataEntity],
             synchronize: true,
           }),
         }),

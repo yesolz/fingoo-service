@@ -37,7 +37,6 @@ import { TwelveApiManager } from '../../../infrastructure/adapter/twelve/util/tw
 import { addTransactionalDataSource, initializeTransactionalContext } from 'typeorm-transactional';
 import { EconomyEntity } from '../../../infrastructure/adapter/persistence/indicator/entity/economy.entity';
 import { FredApiManager } from '../../../infrastructure/adapter/fred/util/fred-api.manager';
-import { PostEntity } from '../../../../community/infrastructure/adapter/persistence/entity/post.entity';
 import { mockSessionIntegration } from '../../../../user/test/data/mock-user.integration';
 import { mockSession1, mockUser1 } from '../../../../user/test/data/mock-user.user1';
 import { of } from 'rxjs';
@@ -129,7 +128,6 @@ describe('Indicator Board Metadata E2E Test', () => {
           }),
           TypeOrmModule.forFeature([
             UserMetadataEntity,
-            PostEntity,
             IndicatorBoardMetadataEntity,
             BondsEntity,
             CryptoCurrenciesEntity,
@@ -155,7 +153,6 @@ describe('Indicator Board Metadata E2E Test', () => {
               entities: [
                 IndicatorBoardMetadataEntity,
                 UserMetadataEntity,
-                PostEntity,
                 IndicatorEntity,
                 BondsEntity,
                 CryptoCurrenciesEntity,

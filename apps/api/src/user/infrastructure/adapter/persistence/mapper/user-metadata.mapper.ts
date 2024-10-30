@@ -18,7 +18,6 @@ export class UserMetadataMapper {
       userMetadataEntity.userId,
       userMetadataEntity.email,
       userMetadataEntity.username,
-      userMetadataEntity.posts,
     );
   }
 }

@@ -20,7 +20,6 @@ import { of } from 'rxjs';
 import { HttpExceptionFilter } from '../../../../commons/exception-filter/http-exception-filter';
 import * as request from 'supertest';
 import { HistoryIndicatorPersistentAdapter } from '../../../infrastructure/adapter/persistence/history-indicator/history-indicator.persistent.adapter';
-import { PostEntity } from '../../../../community/infrastructure/adapter/persistence/entity/post.entity';
 
 jest.mock('typeorm-transactional', () => ({
   Transactional: () => () => ({}),
@@ -95,12 +94,7 @@ describe('History Indicator E2E Test', () => {
           ConfigModule.forRoot({
             isGlobal: true,
           }),
-          TypeOrmModule.forFeature([
-            UserMetadataEntity,
-            PostEntity,
-            HistoryIndicatorEntity,
-            HistoryIndicatorValueEntity,
-          ]),
+          TypeOrmModule.forFeature([UserMetadataEntity, HistoryIndicatorEntity, HistoryIndicatorValueEntity]),
           TypeOrmModule.forRootAsync({
             imports: [ConfigModule],
             inject: [ConfigService],
@@ -115,7 +109,6 @@ describe('History Indicator E2E Test', () => {
               database: DBenvironment.getDatabase(),
               entities: [
                 UserMetadataEntity,
-                PostEntity,
                 IndicatorEntity,
                 HistoryIndicatorEntity,
                 HistoryIndicatorValueEntity,

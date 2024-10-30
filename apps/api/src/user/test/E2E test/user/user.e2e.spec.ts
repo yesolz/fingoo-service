@@ -4,7 +4,6 @@ import { PostgreSqlContainer } from '@testcontainers/postgresql';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { HttpModule } from '@nestjs/axios';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { PostEntity } from '../../../../community/infrastructure/adapter/persistence/entity/post.entity';
 import { CqrsModule } from '@nestjs/cqrs';
 import { UserController } from '../../../api/user.controller';
 import { DataSource } from 'typeorm';
@@ -101,7 +100,7 @@ describe('User E2E Test', () => {
             maxRedirects: 5,
           }),
         }),
-        TypeOrmModule.forFeature([UserMetadataEntity, PostEntity]),
+        TypeOrmModule.forFeature([UserMetadataEntity]),
         TypeOrmModule.forRootAsync({
           imports: [ConfigModule],
           inject: [ConfigService],
@@ -114,7 +113,7 @@ describe('User E2E Test', () => {
             username: environment.getUsername(),
             password: environment.getPassword(),
             database: environment.getDatabase(),
-            entities: [UserMetadataEntity, PostEntity],
+            entities: [UserMetadataEntity],
             synchronize: true,
           }),
         }),

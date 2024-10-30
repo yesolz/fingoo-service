@@ -1,6 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 import { BaseEntity } from '../../../../../commons/entity/base.entity';
-import { PostEntity } from '../../../../../community/infrastructure/adapter/persistence/entity/post.entity';
 
 @Entity('user_metadatas')
 export class UserMetadataEntity extends BaseEntity {
@@ -15,7 +14,4 @@ export class UserMetadataEntity extends BaseEntity {
 
   @Column()
   username: string;
-
-  @OneToMany(() => PostEntity, (post) => post.user)
-  posts: PostEntity[];
 }

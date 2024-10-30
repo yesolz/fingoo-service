@@ -1,5 +1,4 @@
 import { UserMetadataEntity } from '../../../infrastructure/adapter/persistence/entity/user-metadata.entity';
-import { PostEntity } from '../../../../community/infrastructure/adapter/persistence/entity/post.entity';
 
 describe('UserMetadataEntity', () => {
   let userMetadata: UserMetadataEntity;
@@ -34,12 +33,6 @@ describe('UserMetadataEntity', () => {
     const username = 'testuser';
     userMetadata.username = username;
     expect(userMetadata.username).toBe(username);
-  });
-
-  it('should set and get posts correctly', () => {
-    const posts: PostEntity[] = [];
-    userMetadata.posts = posts;
-    expect(userMetadata.posts).toEqual(posts);
   });
 
   it('should set and get createdAt correctly', () => {
