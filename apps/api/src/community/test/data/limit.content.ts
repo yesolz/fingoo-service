@@ -1,0 +1,2 @@
+export const LIMITCONTENT =
+  'In the heart of a bustling city, where the skyline pierces the clouds and the streets are alive with the rhythm of daily life, there exists a small, unassuming café that holds a special place in the community. This café, known as "The Urban Retreat," offers a sanctuary for those seeking solace from the chaos outside. With its warm, inviting atmosphere, the scent of freshly brewed coffee permeates the air, creating an inviting environment for both regulars and newcomers alike.';
