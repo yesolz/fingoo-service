@@ -6,6 +6,7 @@ import { CommunityPersistentAdapter } from './infrastructure/adapter/persistence
 import { HttpModule } from '@nestjs/axios';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PostEntity } from './infrastructure/adapter/persistence/entity/post.entity';
+import { UserMetadataEntity } from '../user/infrastructure/adapter/persistence/entity/user-metadata.entity';
 
 @Module({
   imports: [
@@ -16,7 +17,7 @@ import { PostEntity } from './infrastructure/adapter/persistence/entity/post.ent
         maxRedirects: 5,
       }),
     }),
-    TypeOrmModule.forFeature([PostEntity]),
+    TypeOrmModule.forFeature([PostEntity, UserMetadataEntity]),
   ],
   controllers: [PostController],
   providers: [
