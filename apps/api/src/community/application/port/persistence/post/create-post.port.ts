@@ -1,5 +1,5 @@
-import { PostEntity } from '../../../../infrastructure/adapter/persistence/entity/post.entity';
+import { PostDomain } from '../../../../domain/post.domain';
 
 export interface CreatePostPort {
-  createPost(postEntity: PostEntity): Promise<PostEntity>;
+  createPost(content: string, userId: string): Promise<PostDomain>;
 }
