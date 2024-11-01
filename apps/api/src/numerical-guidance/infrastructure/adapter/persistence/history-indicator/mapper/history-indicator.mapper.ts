@@ -2,7 +2,7 @@ import { HistoryIndicatorValueEntity } from '../../history-indicator-value/entit
 import { HistoryIndicatorDto } from '../../../../../application/query/history-indicator/get-history-indicator/dto/history-indicator.dto';
 
 import { HistoryIndicatorEntity } from '../entity/history-indicator.entity';
-import { IndicatorValue } from '../../../../../../utils/type/type-definition';
+import { IndicatorValue } from '../../../../../../commons/type/type-definition';
 import { Indicator } from '../../../../../application/query/indicator/basic/dto/indicator.dto';
 
 export class HistoryIndicatorMapper {

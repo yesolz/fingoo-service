@@ -1,4 +1,4 @@
-import { IndicatorDtoType, IndicatorType } from '../../../../../../utils/type/type-definition';
+import { IndicatorDtoType, IndicatorType } from '../../../../../../commons/type/type-definition';
 import { CryptoCurrenciesDto } from '../../../../../application/query/indicator/get-indicator-list/dto/crypto-currencies.dto';
 import { ETFDto } from '../../../../../application/query/indicator/get-indicator-list/dto/etf.dto';
 import { ForexPairDto } from '../../../../../application/query/indicator/get-indicator-list/dto/forex-pair.dto';

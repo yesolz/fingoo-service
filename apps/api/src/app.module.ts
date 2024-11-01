@@ -4,15 +4,15 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CommunityModule } from './community/community.module';
 import { DataSource } from 'typeorm';
-import { TypeOrmConfigService } from './utils/config/typeorm.config.service';
+import { TypeOrmConfigService } from './config/typeorm.config.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RedisModule } from '@nestjs-modules/ioredis';
 import { NumericalGuidanceModule } from './numerical-guidance/numerical-guidance.module';
-import { RedisConfigService } from './utils/config/redis.config.service';
-import { AuthModule } from './auth/auth.module';
+import { RedisConfigService } from './config/redis.config.service';
+import { UserModule } from './user/user.module';
 import { addTransactionalDataSource } from 'typeorm-transactional';
 import { APP_GUARD } from '@nestjs/core';
-import { CustomAuthGuard } from './auth/util/custom-auth.guard';
+import { JwtAuthGuard } from './user/util/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -34,16 +34,15 @@ import { CustomAuthGuard } from './auth/util/custom-auth.guard';
       useClass: RedisConfigService,
     }),
     CommunityModule,
-    // MyRedisModule, https://github.com/nest-modules/ioredis/issues/280
     NumericalGuidanceModule,
-    AuthModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [
     AppService,
     {
       provide: APP_GUARD,
-      useClass: CustomAuthGuard,
+      useClass: JwtAuthGuard,
     },
   ],
 })

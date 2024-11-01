@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IndicatorType } from '../../../../../../utils/type/type-definition';
+import { IndicatorType } from '../../../../../../commons/type/type-definition';
 
 export class IndicesDto {
   @ApiProperty({

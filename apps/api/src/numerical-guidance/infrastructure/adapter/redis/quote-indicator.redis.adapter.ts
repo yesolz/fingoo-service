@@ -1,9 +1,9 @@
 import { CachingQuoteIndicatorPort } from '../../../application/port/cache/caching-quote-indicator.port';
 import { IndicatorQuoteData } from '../../../application/query/quote-indicator/get-quote-indicator/interface/quote-indicator-data.interface';
-import { IndicatorDtoType } from '../../../../utils/type/type-definition';
+import { IndicatorDtoType } from '../../../../commons/type/type-definition';
 import { LoadCachedQuoteIndicatorPort } from '../../../application/port/cache/load-cached-quote-indicator.port';
 import { BaseRedisAdapter } from './base-redis.adapter';
-import { QuoteIndicatorIntervalEnum } from '../../../../utils/enum/enum-definition';
+import { QuoteIndicatorIntervalEnum } from '../../../../commons/enum/enum-definition';
 import { QuoteIndicatorMapper } from '../twelve/mapper/quote-indicator.mapper';
 import { Injectable } from '@nestjs/common';
 

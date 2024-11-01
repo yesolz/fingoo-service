@@ -1,4 +1,4 @@
-import { BusinessRule } from 'src/utils/domain/business.rule';
+import { BusinessRule } from 'src/commons/domain/business.rule';
 
 export class TargetIndicatorIdShouldBeUUIDRule implements BusinessRule {
   constructor(private readonly targetIndicatorId: string) {}

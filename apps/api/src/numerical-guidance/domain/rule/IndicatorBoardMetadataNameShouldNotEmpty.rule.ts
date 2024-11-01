@@ -1,4 +1,4 @@
-import { BusinessRule } from '../../../utils/domain/business.rule';
+import { BusinessRule } from '../../../commons/domain/business.rule';
 
 export class IndicatorBoardMetadataNameShouldNotEmptyRule implements BusinessRule {
   constructor(private readonly indicatorBoardMetadataName: string) {}

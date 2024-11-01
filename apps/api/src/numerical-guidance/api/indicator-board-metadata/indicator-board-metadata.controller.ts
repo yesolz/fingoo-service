@@ -1,9 +1,9 @@
 import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { Body, Controller, Delete, Get, Param, Patch, Post, UploadedFile } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { ApiExceptionResponse } from '../../../utils/exception-filter/api-exception-response.decorator';
+import { ApiExceptionResponse } from '../../../commons/exception-filter/api-exception-response.decorator';
 import { CreateIndicatorBoardMetadataDto } from './dto/create-indicator-board-metadata.dto';
-import { LoginUser } from '../../../auth/util/get-login-user.decorator';
+import { LoginUser } from '../../../user/util/login-user.decorator';
 import { CreateIndicatorBoardMetadataCommand } from '../../application/command/indicator-board-metadata/create-indicator-board-metadata/create-indicator-board-metadata.command';
 import { IndicatorBoardMetadata } from '../../domain/indicator-board-metadata';
 import { GetIndicatorBoardMetadataQuery } from '../../application/query/indicator-board-metadata/get-indicator-board-metadata/get-indicator-board-metadata.query';
@@ -17,7 +17,7 @@ import { DeleteIndicatorBoardMetadataCommand } from '../../application/command/i
 import { UpdateIndicatorBoardMetadataNameDto } from './dto/update-indicator-board-metadata-name.dto';
 import { UpdateIndicatorBoardMetadataNameCommand } from '../../application/command/indicator-board-metadata/update-indicator-board-metadata-name/update-indicator-board-metadata-name.command';
 import { DeleteCustomForecastIndicatorIdCommand } from 'src/numerical-guidance/application/command/custom-forecast-indicator/delete-custom-forecast-indicator-id/delete-custom-forecast-indicator-id.command';
-import { ApiFile } from '../../../utils/file/api-file.decorator';
+import { ApiFile } from '../../../commons/file/api-file.decorator';
 import { UploadFileCommand } from '../../application/command/indicator-board-metadata/upload-file/upload-file.command';
 import { UpdateSectionsDto } from './dto/update-sections.dto';
 import { UpdateSectionsCommand } from '../../application/command/indicator-board-metadata/update-sections/update-sections.command';

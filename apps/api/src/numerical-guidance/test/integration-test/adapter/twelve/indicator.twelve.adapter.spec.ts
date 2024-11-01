@@ -19,7 +19,7 @@ import { LiveStockDto } from '../../../../application/query/live-indicator/get-l
 import { DataSource } from 'typeorm';
 import { liveIndicatorTestData } from '../../../data/live-indicator-test-data';
 import { StockDto } from '../../../../application/query/indicator/get-indicator-list/dto/stock.dto';
-import { LiveIndicatorDtoType } from '../../../../../utils/type/type-definition';
+import { LiveIndicatorDtoType } from '../../../../../commons/type/type-definition';
 
 const testData = liveIndicatorTestData;
 

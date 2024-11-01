@@ -1,4 +1,4 @@
-import { IndicatorType } from '../../../../../../utils/type/type-definition';
+import { IndicatorType } from '../../../../../../commons/type/type-definition';
 import { ApiProperty } from '@nestjs/swagger';
 
 export type Indicator = {

@@ -1,4 +1,4 @@
-import { IndicatorDtoType, LiveIndicatorDtoType } from '../../../../../utils/type/type-definition';
+import { IndicatorDtoType, LiveIndicatorDtoType } from '../../../../../commons/type/type-definition';
 
 export interface LoadLiveEconomyIndicatorPort {
   loadLiveIndicator(

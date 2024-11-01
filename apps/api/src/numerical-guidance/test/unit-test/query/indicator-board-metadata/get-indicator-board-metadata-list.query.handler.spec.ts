@@ -4,11 +4,13 @@ import { GetIndicatorBoardMetadataListQueryHandler } from 'src/numerical-guidanc
 import { PostgreSqlContainer } from '@testcontainers/postgresql';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { MemberEntity } from '../../../../../auth/entity/member.entity';
+import { UserMetadataEntity } from '../../../../../user/infrastructure/adapter/persistence/entity/user-metadata.entity';
 import { IndicatorBoardMetadataEntity } from '../../../../infrastructure/adapter/persistence/indicator-board-metadata/entity/indicator-board-metadata.entity';
-import { AuthService } from '../../../../../auth/application/auth.service';
 import { DataSource } from 'typeorm';
 import { BadRequestException, HttpStatus, NotFoundException } from '@nestjs/common';
+import { mockUserMetadataData1 } from '../../../../../user/test/data/mock-user.metadata.data1';
+import { mockUserMetadataData3 } from '../../../../../user/test/data/mock-user.metadata.data3';
+import { mockUserMetadataData2 } from '../../../../../user/test/data/mock-user.metadata.data2';
 
 jest.mock('typeorm-transactional', () => ({
   Transactional: () => () => ({}),
@@ -20,11 +22,10 @@ describe('GetIndicatorBoardMetadataListQueryHandler', () => {
   let dataSource: DataSource;
 
   const seeding = async () => {
-    const memberRepository = dataSource.getRepository(MemberEntity);
-    await memberRepository.insert({ id: '10', email: 'test@gmail.com' });
-    await memberRepository.insert({ id: '5', email: 'test@gmail.com' });
-    await memberRepository.insert({ id: '999', email: 'test@gmail.com' });
-    memberRepository.save;
+    const memberRepository = dataSource.getRepository(UserMetadataEntity);
+    await memberRepository.insert(mockUserMetadataData1);
+    await memberRepository.insert(mockUserMetadataData2);
+    await memberRepository.insert(mockUserMetadataData3);
 
     const indicatorBoardMetadataRepository = dataSource.getRepository(IndicatorBoardMetadataEntity);
     await indicatorBoardMetadataRepository.insert({
@@ -33,7 +34,7 @@ describe('GetIndicatorBoardMetadataListQueryHandler', () => {
       indicatorInfos: [],
       customForecastIndicatorIds: [],
       sections: { section1: [] },
-      member: { id: '10', email: 'test@gmail.com' },
+      member: mockUserMetadataData1,
     });
     await indicatorBoardMetadataRepository.insert({
       id: '0d73cea1-35a5-432f-bcd1-27ae3541ba74',
@@ -41,7 +42,7 @@ describe('GetIndicatorBoardMetadataListQueryHandler', () => {
       indicatorInfos: [],
       customForecastIndicatorIds: [],
       sections: { section1: [] },
-      member: { id: '10', email: 'test@gmail.com' },
+      member: mockUserMetadataData1,
     });
   };
 
@@ -52,7 +53,7 @@ describe('GetIndicatorBoardMetadataListQueryHandler', () => {
         ConfigModule.forRoot({
           isGlobal: true,
         }),
-        TypeOrmModule.forFeature([MemberEntity, IndicatorBoardMetadataEntity]),
+        TypeOrmModule.forFeature([UserMetadataEntity, IndicatorBoardMetadataEntity]),
         TypeOrmModule.forRootAsync({
           imports: [ConfigModule],
           inject: [ConfigService],
@@ -65,12 +66,12 @@ describe('GetIndicatorBoardMetadataListQueryHandler', () => {
             username: environment.getUsername(),
             password: environment.getPassword(),
             database: environment.getDatabase(),
-            entities: [IndicatorBoardMetadataEntity, MemberEntity],
+            entities: [IndicatorBoardMetadataEntity, UserMetadataEntity],
             synchronize: true,
           }),
         }),
       ],
-      providers: [GetIndicatorBoardMetadataListQueryHandler, AuthService],
+      providers: [GetIndicatorBoardMetadataListQueryHandler],
     }).compile();
     getIndicatorBoardMetadataListQueryHandler = module.get(GetIndicatorBoardMetadataListQueryHandler);
     dataSource = module.get<DataSource>(DataSource);
@@ -83,7 +84,7 @@ describe('GetIndicatorBoardMetadataListQueryHandler', () => {
 
   it('사용자 id로 메타데이터 리스트 가져오기.', async () => {
     // given
-    const memberId = '10';
+    const memberId = mockUserMetadataData1.userId;
     const testQuery = new GetIndicatorBoardMetadataListQuery(memberId);
 
     // when

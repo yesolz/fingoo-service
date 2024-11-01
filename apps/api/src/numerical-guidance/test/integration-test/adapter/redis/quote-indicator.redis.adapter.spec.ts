@@ -5,7 +5,7 @@ import { RedisModule } from '@nestjs-modules/ioredis';
 import { ConfigModule } from '@nestjs/config';
 import { QuoteIndicatorRedisAdapter } from '../../../../infrastructure/adapter/redis/quote-indicator.redis.adapter';
 import { QuoteStockDto } from '../../../../application/query/quote-indicator/get-quote-indicator/dto/quote-stock.dto';
-import { QuoteIndicatorIntervalEnum } from '../../../../../utils/enum/enum-definition';
+import { QuoteIndicatorIntervalEnum } from '../../../../../commons/enum/enum-definition';
 import { StockDto } from '../../../../application/query/indicator/get-indicator-list/dto/stock.dto';
 
 const testData1: QuoteStockDto = quoteIndicatorTestData1;

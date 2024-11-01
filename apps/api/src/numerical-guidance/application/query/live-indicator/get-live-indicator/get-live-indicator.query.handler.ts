@@ -7,7 +7,7 @@ import {
   IndicatorDtoType,
   Interval,
   LiveIndicatorDtoType,
-} from '../../../../../utils/type/type-definition';
+} from '../../../../../commons/type/type-definition';
 import { CachingLiveIndicatorPort } from '../../../port/cache/caching-live-indicator.port';
 import { LoadCachedLiveIndicatorPort } from '../../../port/cache/load-cached-live-indicator.port';
 import { LoadIndicatorPort } from '../../../port/persistence/indicator/load-indicator.port';

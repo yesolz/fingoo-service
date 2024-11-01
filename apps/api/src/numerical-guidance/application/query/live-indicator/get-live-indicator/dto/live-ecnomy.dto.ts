@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { FredFrequency, IndicatorType, IndicatorValue } from '../../../../../../utils/type/type-definition';
+import { FredFrequency, IndicatorType, IndicatorValue } from '../../../../../../commons/type/type-definition';
 
 export class LiveEconomyDto {
   @ApiProperty({

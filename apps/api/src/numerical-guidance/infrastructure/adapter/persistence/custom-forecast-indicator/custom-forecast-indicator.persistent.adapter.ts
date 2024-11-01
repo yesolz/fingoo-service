@@ -12,15 +12,15 @@ import { QueryFailedError, Repository, TypeORMError } from 'typeorm';
 import { CustomForecastIndicator } from 'src/numerical-guidance/domain/custom-forecast-indicator';
 import { CustomForecastIndicatorMapper } from './mapper/custom-forecast-indicator.mapper';
 import { LoadCustomForecastIndicatorPort } from 'src/numerical-guidance/application/port/persistence/custom-forecast-indicator/load-custom-forecast-indicator.port';
-import { AuthService } from 'src/auth/application/auth.service';
 import { LoadCustomForecastIndicatorsByMemberIdPort } from 'src/numerical-guidance/application/port/persistence/custom-forecast-indicator/load-custom-forecast-indicators-by-member-id.port';
 import { UpdateSourceIndicatorsInformationPort } from 'src/numerical-guidance/application/port/persistence/custom-forecast-indicator/update-source-indicators-information.port';
 import { HttpService } from '@nestjs/axios';
-import { ForecastApiResponse, SourceIndicatorInformation } from 'src/utils/type/type-definition';
+import { ForecastApiResponse, SourceIndicatorInformation } from 'src/commons/type/type-definition';
 import { UpdateCustomForecastIndicatorNamePort } from 'src/numerical-guidance/application/port/persistence/custom-forecast-indicator/update-custom-forecast-indicator-name.port';
 import { DeleteCustomForecastIndicatorPort } from 'src/numerical-guidance/application/port/persistence/custom-forecast-indicator/delete-custom-forecast-indicator.port';
 import { LoadCustomForecastIndicatorValuesPort } from 'src/numerical-guidance/application/port/persistence/custom-forecast-indicator/load-custom-forecast-indicator-values.port';
 import { IndicatorBoardMetadataEntity } from '../indicator-board-metadata/entity/indicator-board-metadata.entity';
+import { UserMetadataEntity } from '../../../../../user/infrastructure/adapter/persistence/entity/user-metadata.entity';
 
 @Injectable()
 export class CustomForecastIndicatorPersistentAdapter
@@ -38,7 +38,8 @@ export class CustomForecastIndicatorPersistentAdapter
     private readonly customForecastIndicatorRepository: Repository<CustomForecastIndicatorEntity>,
     @InjectRepository(IndicatorBoardMetadataEntity)
     private readonly indicatorBoardMetadataRepository: Repository<IndicatorBoardMetadataEntity>,
-    private readonly authService: AuthService,
+    @InjectRepository(UserMetadataEntity)
+    private readonly userMetadataRepository: Repository<UserMetadataEntity>,
     private readonly api: HttpService,
   ) {}
 
@@ -153,7 +154,9 @@ export class CustomForecastIndicatorPersistentAdapter
 
   async loadCustomForecastIndicatorsByMemberId(memberId: string): Promise<CustomForecastIndicator[]> {
     try {
-      const member = await this.authService.findById(memberId);
+      const member = await this.userMetadataRepository.findOne({
+        where: { userId: memberId },
+      });
       this.nullCheckForEntity(member);
 
       const customForecastIndicatorEntities: CustomForecastIndicatorEntity[] =
@@ -187,7 +190,9 @@ export class CustomForecastIndicatorPersistentAdapter
     memberId: string,
   ): Promise<string> {
     try {
-      const member = await this.authService.findById(memberId);
+      const member = await this.userMetadataRepository.findOne({
+        where: { userId: memberId },
+      });
       this.nullCheckForEntity(member);
       const customForecastIndicatorEntity: CustomForecastIndicatorEntity =
         CustomForecastIndicatorMapper.mapDomainToNewEntity(customForecastIndicator, member);
@@ -317,13 +322,13 @@ export class CustomForecastIndicatorPersistentAdapter
         });
       this.nullCheckForEntity(customForecastIndicatorEntity);
 
-      const memberId = customForecastIndicatorEntity.member.id;
+      const memberId = customForecastIndicatorEntity.member.userId;
 
       const indicatorBoardMetadataEntities: IndicatorBoardMetadataEntity[] = await this.indicatorBoardMetadataRepository
         .createQueryBuilder('indicatorBordMetadata')
         .leftJoin('indicatorBordMetadata.member', 'member')
         .where('indicatorBordMetadata.customForecastIndicatorIds @> :id', { id: `"${customForecastIndicatorId}"` })
-        .andWhere('member.id = :memberId', { memberId })
+        .andWhere('member.userId = :memberId', { memberId })
         .getMany();
 
       await this.customForecastIndicatorRepository.remove(customForecastIndicatorEntity);

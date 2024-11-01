@@ -1,6 +1,6 @@
 import { IQuery } from '@nestjs/cqrs';
-import { IndicatorType } from '../../../../../utils/type/type-definition';
-import { QuoteIndicatorIntervalEnum } from '../../../../../utils/enum/enum-definition';
+import { IndicatorType } from '../../../../../commons/type/type-definition';
+import { QuoteIndicatorIntervalEnum } from '../../../../../commons/enum/enum-definition';
 
 export class GetQuoteIndicatorQuery implements IQuery {
   constructor(

@@ -1,6 +1,6 @@
 import { IndicatorBoardMetadata, IndicatorInfo } from '../../../domain/indicator-board-metadata';
 import { IndicatorBoardMetadataCountShouldNotExceedLimitRule } from '../../../domain/rule/IndicatorBoardMetadataCountShouldNotExceedLimit.rule';
-import { BusinessRuleValidationException } from '../../../../utils/domain/business-rule-validation.exception';
+import { BusinessRuleValidationException } from '../../../../commons/domain/business-rule-validation.exception';
 import { IndicatorBoardMetadataNameShouldNotEmptyRule } from '../../../domain/rule/IndicatorBoardMetadataNameShouldNotEmpty.rule';
 import { IndicatorInIndicatorBoardMetadataShouldNotDuplicateRule } from '../../../domain/rule/IndicatorInIndicatorBoardMetadataShouldNotDuplicate.rule';
 import { OnlyRegisteredIdCanBeRemovedRule } from '../../../domain/rule/OnlyRegisteredIdCanBeRemoved.rule';

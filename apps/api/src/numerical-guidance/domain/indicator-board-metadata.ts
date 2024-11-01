@@ -1,11 +1,11 @@
-import { AggregateRoot } from 'src/utils/domain/aggregate-root';
+import { AggregateRoot } from 'src/commons/domain/aggregate-root';
 import { IndicatorBoardMetadataCountShouldNotExceedLimitRule } from './rule/IndicatorBoardMetadataCountShouldNotExceedLimit.rule';
 import { IndicatorBoardMetadataNameShouldNotEmptyRule } from './rule/IndicatorBoardMetadataNameShouldNotEmpty.rule';
 import { IndicatorInIndicatorBoardMetadataShouldNotDuplicateRule } from './rule/IndicatorInIndicatorBoardMetadataShouldNotDuplicate.rule';
 import { OnlyRegisteredIdCanBeRemovedRule } from './rule/OnlyRegisteredIdCanBeRemoved.rule';
 import { ApiProperty } from '@nestjs/swagger';
 import { IndicatorIdInSectionsShouldBeInIndicatorRule } from './rule/IndicatorIdInSectionsShouldBeInIndicator.rule';
-import { IndicatorType } from '../../utils/type/type-definition';
+import { IndicatorType } from '../../commons/type/type-definition';
 
 export type IndicatorInfo = {
   id: string;

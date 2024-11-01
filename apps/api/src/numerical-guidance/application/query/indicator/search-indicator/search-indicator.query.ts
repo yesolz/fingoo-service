@@ -1,5 +1,5 @@
 import { IQuery } from '@nestjs/cqrs';
-import { IndicatorType } from '../../../../../utils/type/type-definition';
+import { IndicatorType } from '../../../../../commons/type/type-definition';
 import { DEFAULT_INDICATOR_TYPE } from '../../../../api/indicator/dto/search-indicator.dto';
 
 export class SearchIndicatorQuery implements IQuery {

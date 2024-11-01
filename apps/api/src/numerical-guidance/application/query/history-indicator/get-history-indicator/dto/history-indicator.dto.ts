@@ -1,4 +1,4 @@
-import { IndicatorValue } from '../../../../../../utils/type/type-definition';
+import { IndicatorValue } from '../../../../../../commons/type/type-definition';
 import { Indicator } from '../../../indicator/basic/dto/indicator.dto';
 
 export type HistoryIndicatorValue = {

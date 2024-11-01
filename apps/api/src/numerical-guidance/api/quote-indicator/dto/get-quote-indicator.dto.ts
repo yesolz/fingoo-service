@@ -1,8 +1,8 @@
 import { IsBoolean, IsEnum, IsOptional, IsString, IsUUID } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { IndicatorType } from '../../../../utils/type/type-definition';
-import { IsIndicatorType } from '../../../../utils/validation/is.indicator-type.validation';
-import { QuoteIndicatorIntervalEnum } from '../../../../utils/enum/enum-definition';
+import { IndicatorType } from '../../../../commons/type/type-definition';
+import { IsIndicatorType } from '../../../../commons/validation/is.indicator-type.validation';
+import { QuoteIndicatorIntervalEnum } from '../../../../commons/enum/enum-definition';
 
 export class GetQuoteIndicatorDto {
   @ApiProperty({

@@ -1,11 +1,11 @@
 import { CustomForecastIndicator } from 'src/numerical-guidance/domain/custom-forecast-indicator';
 import { CustomForecastIndicatorEntity } from '../entity/custom-forecast-indicator.entity';
-import { MemberEntity } from 'src/auth/entity/member.entity';
+import { UserMetadataEntity } from 'src/user/infrastructure/adapter/persistence/entity/user-metadata.entity';
 
 export class CustomForecastIndicatorMapper {
   static mapDomainToNewEntity(
     customForecastIndicator: CustomForecastIndicator,
-    member: MemberEntity,
+    member: UserMetadataEntity,
   ): CustomForecastIndicatorEntity {
     const customForecastIndicatorEntity: CustomForecastIndicatorEntity = CustomForecastIndicatorEntity.createNew(
       customForecastIndicator.customForecastIndicatorName,

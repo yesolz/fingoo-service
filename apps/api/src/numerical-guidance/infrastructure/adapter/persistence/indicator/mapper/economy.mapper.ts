@@ -1,5 +1,5 @@
 import { EconomyDto } from '../../../../../application/query/indicator/get-indicator-list/dto/economy.dto';
-import { IndicatorType } from '../../../../../../utils/type/type-definition';
+import { IndicatorType } from '../../../../../../commons/type/type-definition';
 import { EconomyEntity } from '../entity/economy.entity';
 
 export class EconomyMapper {

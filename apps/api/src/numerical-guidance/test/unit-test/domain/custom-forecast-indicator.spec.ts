@@ -3,8 +3,8 @@ import { CustomForecastIndicatorNameShouldNotEmptyRule } from 'src/numerical-gui
 import { SourceIndicatorCountShouldNotExceedLimitRule } from 'src/numerical-guidance/domain/rule/SourceIndicatorCountShouldNotBeExeedLimit.rule';
 import { SourceIndicatorsShouldNotDuplicateRule } from 'src/numerical-guidance/domain/rule/SourceIndicatorsShouldNotDuplicate.rule';
 import { TargetIndicatorShouldNotBeIncludedInSourceIndicatorsRule } from 'src/numerical-guidance/domain/rule/TargetIndicatorShouldNotBeIncludedInSourceIndicators.rule';
-import { BusinessRuleValidationException } from 'src/utils/domain/business-rule-validation.exception';
-import { IndicatorType, SourceIndicatorInformation } from 'src/utils/type/type-definition';
+import { BusinessRuleValidationException } from 'src/commons/domain/business-rule-validation.exception';
+import { IndicatorType, SourceIndicatorInformation } from 'src/commons/type/type-definition';
 
 describe('예측지표', () => {
   it('예측 지표 생성', () => {

@@ -6,7 +6,7 @@ import {
   IndicatorValue,
   Interval,
   LiveIndicatorDtoType,
-} from '../../../../utils/type/type-definition';
+} from '../../../../commons/type/type-definition';
 import { IndicatorFredMapper } from './mapper/indicator.fred.mapper';
 
 @Injectable()

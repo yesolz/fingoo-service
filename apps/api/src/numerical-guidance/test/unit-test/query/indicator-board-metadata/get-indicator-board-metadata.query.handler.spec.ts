@@ -2,12 +2,11 @@ import { Test } from '@nestjs/testing';
 import { GetIndicatorBoardMetadataQuery } from 'src/numerical-guidance/application/query/indicator-board-metadata/get-indicator-board-metadata/get-indicator-board-metadata.query';
 import { GetIndicatorBoardMetadataQueryHandler } from 'src/numerical-guidance/application/query/indicator-board-metadata/get-indicator-board-metadata/get-indicator-board-metadata.query.handler';
 import { BadRequestException, HttpStatus, NotFoundException } from '@nestjs/common';
-import { MemberEntity } from '../../../../../auth/entity/member.entity';
+import { UserMetadataEntity } from '../../../../../user/infrastructure/adapter/persistence/entity/user-metadata.entity';
 import { IndicatorBoardMetadataEntity } from '../../../../infrastructure/adapter/persistence/indicator-board-metadata/entity/indicator-board-metadata.entity';
 import { PostgreSqlContainer } from '@testcontainers/postgresql';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AuthService } from '../../../../../auth/application/auth.service';
 import { DataSource } from 'typeorm';
 
 jest.mock('typeorm-transactional', () => ({
@@ -20,10 +19,10 @@ describe('GetIndicatorBoardMetadataQueryHandler', () => {
   let dataSource: DataSource;
 
   const seeding = async () => {
-    const memberRepository = dataSource.getRepository(MemberEntity);
-    await memberRepository.insert({ id: '10', email: 'test@gmail.com' });
-    await memberRepository.insert({ id: '5', email: 'test@gmail.com' });
-    await memberRepository.insert({ id: '999', email: 'test@gmail.com' });
+    const memberRepository = dataSource.getRepository(UserMetadataEntity);
+    await memberRepository.insert({ userId: '10', email: 'test1@gmail.com', username: 'testname' });
+    await memberRepository.insert({ userId: '5', email: 'test2@gmail.com', username: 'testname' });
+    await memberRepository.insert({ userId: '999', email: 'test3@gmail.com', username: 'testname' });
 
     const indicatorBoardMetadataRepository = dataSource.getRepository(IndicatorBoardMetadataEntity);
     await indicatorBoardMetadataRepository.insert({
@@ -32,7 +31,7 @@ describe('GetIndicatorBoardMetadataQueryHandler', () => {
       indicatorInfos: [],
       customForecastIndicatorIds: [],
       sections: { section1: [] },
-      member: { id: '10', email: 'test@gmail.com' },
+      member: { userId: '10', email: 'test1@gmail.com', username: 'testname' },
     });
   };
 
@@ -43,7 +42,7 @@ describe('GetIndicatorBoardMetadataQueryHandler', () => {
         ConfigModule.forRoot({
           isGlobal: true,
         }),
-        TypeOrmModule.forFeature([MemberEntity, IndicatorBoardMetadataEntity]),
+        TypeOrmModule.forFeature([UserMetadataEntity, IndicatorBoardMetadataEntity]),
         TypeOrmModule.forRootAsync({
           imports: [ConfigModule],
           inject: [ConfigService],
@@ -56,12 +55,12 @@ describe('GetIndicatorBoardMetadataQueryHandler', () => {
             username: environment.getUsername(),
             password: environment.getPassword(),
             database: environment.getDatabase(),
-            entities: [IndicatorBoardMetadataEntity, MemberEntity],
+            entities: [IndicatorBoardMetadataEntity, UserMetadataEntity],
             synchronize: true,
           }),
         }),
       ],
-      providers: [GetIndicatorBoardMetadataQueryHandler, AuthService],
+      providers: [GetIndicatorBoardMetadataQueryHandler],
     }).compile();
     getIndicatorBoardMetadataQueryHandler = module.get(GetIndicatorBoardMetadataQueryHandler);
     dataSource = module.get<DataSource>(DataSource);

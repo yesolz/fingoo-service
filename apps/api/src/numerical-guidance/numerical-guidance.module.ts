@@ -8,7 +8,7 @@ import { CreateIndicatorBoardMetadataCommandHandler } from './application/comman
 import { IndicatorBoardMetadataPersistentAdapter } from './infrastructure/adapter/persistence/indicator-board-metadata/indicator-board-metadata.persistent.adapter';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { IndicatorBoardMetadataEntity } from './infrastructure/adapter/persistence/indicator-board-metadata/entity/indicator-board-metadata.entity';
-import { MemberEntity } from '../auth/entity/member.entity';
+import { UserMetadataEntity } from '../user/infrastructure/adapter/persistence/entity/user-metadata.entity';
 import { GetIndicatorBoardMetadataQueryHandler } from './application/query/indicator-board-metadata/get-indicator-board-metadata/get-indicator-board-metadata.query.handler';
 import { InsertIndicatorIdCommandHandler } from './application/command/indicator/insert-indicator-id/insert-indicator-id.command.handler';
 import { GetIndicatorBoardMetadataListQueryHandler } from './application/query/indicator-board-metadata/get-indicator-board-metadata-list/get-indicator-board-metadata-list.query.handler';
@@ -55,9 +55,6 @@ import { FundEntity } from './infrastructure/adapter/persistence/indicator/entit
 import { IndicesEntity } from './infrastructure/adapter/persistence/indicator/entity/indices.entity';
 import { StockEntity } from './infrastructure/adapter/persistence/indicator/entity/stock.entity';
 import { SearchTwelveIndicatorQueryHandler } from './application/query/indicator/search-twelve-indicator/search-twelve-indicator.query.handler';
-import { AuthService } from '../auth/application/auth.service';
-import { SupabaseStrategy } from '../auth/supabase/supabase.strategy';
-import { SupabaseService } from '../auth/supabase/supabase.service';
 import { SearchIndicatorQueryHandler } from './application/query/indicator/search-indicator/search-indicator.query.handler';
 import { FredApiManager } from './infrastructure/adapter/fred/util/fred-api.manager';
 import { EconomyEntity } from './infrastructure/adapter/persistence/indicator/entity/economy.entity';
@@ -82,7 +79,7 @@ import { IndicatorFredAdapter } from './infrastructure/adapter/fred/indicator.fr
     }),
     TypeOrmModule.forFeature([
       IndicatorBoardMetadataEntity,
-      MemberEntity,
+      UserMetadataEntity,
       IndicatorEntity,
       HistoryIndicatorEntity,
       HistoryIndicatorValueEntity,
@@ -98,9 +95,6 @@ import { IndicatorFredAdapter } from './infrastructure/adapter/fred/indicator.fr
     ]),
   ],
   providers: [
-    AuthService,
-    SupabaseService,
-    SupabaseStrategy,
     AdjustIndicatorValue,
     GetLiveIndicatorQueryHandler,
     GetQuoteIndicatorQueryHandler,

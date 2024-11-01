@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { IndicatorValueManager } from './indicator-value-manager';
-import { IndicatorValue } from '../../utils/type/type-definition';
+import { IndicatorValue } from '../../commons/type/type-definition';
 
 const DATA_DECIMAL_POINT = 6;
 const INIT_DATA = 0;

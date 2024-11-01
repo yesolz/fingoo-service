@@ -1,9 +1,9 @@
 import { IsOptional, IsString, IsUUID } from 'class-validator';
-import { IsInterval } from '../../../../utils/validation/is.interval.validation';
+import { IsInterval } from '../../../../commons/validation/is.interval.validation';
 import { ApiProperty } from '@nestjs/swagger';
-import { IndicatorType, Interval } from 'src/utils/type/type-definition';
+import { IndicatorType, Interval } from 'src/commons/type/type-definition';
 import { Type } from 'class-transformer';
-import { IsIndicatorType } from '../../../../utils/validation/is.indicator-type.validation';
+import { IsIndicatorType } from '../../../../commons/validation/is.indicator-type.validation';
 
 export class GetLiveIndicatorDto {
   @ApiProperty({

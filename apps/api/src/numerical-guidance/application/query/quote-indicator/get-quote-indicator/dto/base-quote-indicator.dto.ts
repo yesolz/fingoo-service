@@ -1,7 +1,7 @@
 import { IndicatorQuoteData } from '../interface/quote-indicator-data.interface';
 import { QuoteIndicatorFiftyTwoWeekDto } from './quote-indicator.fify-two-week.dto';
 import { ApiProperty } from '@nestjs/swagger';
-import { IndicatorType } from 'src/utils/type/type-definition';
+import { IndicatorType } from 'src/commons/type/type-definition';
 
 export class BaseQuoteIndicatorDto implements IndicatorQuoteData {
   @ApiProperty({

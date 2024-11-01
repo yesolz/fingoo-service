@@ -2,8 +2,8 @@ import { GetIndicatorListQuery } from './get-indicator-list.query';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Inject, Injectable } from '@nestjs/common';
 import { LoadIndicatorListPort } from '../../../port/persistence/indicator/load-indicator-list.port';
-import { CursorPageDto } from '../../../../../utils/pagination/cursor-page.dto';
-import { IndicatorDtoType } from '../../../../../utils/type/type-definition';
+import { CursorPageDto } from '../../../../../commons/pagination/cursor-page.dto';
+import { IndicatorDtoType } from '../../../../../commons/type/type-definition';
 
 @Injectable()
 @QueryHandler(GetIndicatorListQuery)

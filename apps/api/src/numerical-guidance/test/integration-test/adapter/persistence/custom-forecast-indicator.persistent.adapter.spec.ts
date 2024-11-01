@@ -4,14 +4,12 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Test } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PostgreSqlContainer } from '@testcontainers/postgresql';
-import { AuthService } from 'src/auth/application/auth.service';
-import { MemberEntity } from 'src/auth/entity/member.entity';
+import { UserMetadataEntity } from 'src/user/infrastructure/adapter/persistence/entity/user-metadata.entity';
 import { CustomForecastIndicator } from 'src/numerical-guidance/domain/custom-forecast-indicator';
 import { CustomForecastIndicatorPersistentAdapter } from 'src/numerical-guidance/infrastructure/adapter/persistence/custom-forecast-indicator/custom-forecast-indicator.persistent.adapter';
 import { CustomForecastIndicatorEntity } from 'src/numerical-guidance/infrastructure/adapter/persistence/custom-forecast-indicator/entity/custom-forecast-indicator.entity';
 import { DataSource } from 'typeorm';
 import { IndicatorEntity } from 'src/numerical-guidance/infrastructure/adapter/persistence/indicator/entity/indicator.entity';
-import { SupabaseService } from '../../../../../auth/supabase/supabase.service';
 import { IndicatorBoardMetadataEntity } from 'src/numerical-guidance/infrastructure/adapter/persistence/indicator-board-metadata/entity/indicator-board-metadata.entity';
 import { IndicatorBoardMetadataPersistentAdapter } from 'src/numerical-guidance/infrastructure/adapter/persistence/indicator-board-metadata/indicator-board-metadata.persistent.adapter';
 
@@ -25,9 +23,13 @@ describe('CustomForecastIndicatorPersistentAdapter', () => {
   let customForecastIndicatorPersistentAdapter: CustomForecastIndicatorPersistentAdapter;
   let indicatorBoardMetadataPersistentAdapter: IndicatorBoardMetadataPersistentAdapter;
   const seeding = async () => {
-    const memberRepository = dataSource.getRepository(MemberEntity);
-    await memberRepository.insert({ id: '1', email: 'test@gmail.com' });
-    const member = await memberRepository.findOneBy({ id: '1' });
+    const memberRepository = dataSource.getRepository(UserMetadataEntity);
+    await memberRepository.insert({
+      userId: '11111111-1111-1111-1111-111111111111',
+      email: 'example@gmail.com',
+      username: 'testname',
+    });
+    const member = await memberRepository.findOneBy({ userId: '11111111-1111-1111-1111-111111111111' });
 
     const customForecastIndicatorRepository = dataSource.getRepository(CustomForecastIndicatorEntity);
     const indicatorBoardMetadataRepository = dataSource.getRepository(IndicatorBoardMetadataEntity);
@@ -166,7 +168,7 @@ describe('CustomForecastIndicatorPersistentAdapter', () => {
         }),
         TypeOrmModule.forFeature([
           CustomForecastIndicatorEntity,
-          MemberEntity,
+          UserMetadataEntity,
           IndicatorEntity,
           IndicatorBoardMetadataEntity,
         ]),
@@ -182,17 +184,17 @@ describe('CustomForecastIndicatorPersistentAdapter', () => {
             username: environment.getUsername(),
             password: environment.getPassword(),
             database: environment.getDatabase(),
-            entities: [CustomForecastIndicatorEntity, MemberEntity, IndicatorEntity, IndicatorBoardMetadataEntity],
+            entities: [
+              CustomForecastIndicatorEntity,
+              UserMetadataEntity,
+              IndicatorEntity,
+              IndicatorBoardMetadataEntity,
+            ],
             synchronize: true,
           }),
         }),
       ],
-      providers: [
-        CustomForecastIndicatorPersistentAdapter,
-        SupabaseService,
-        AuthService,
-        IndicatorBoardMetadataPersistentAdapter,
-      ],
+      providers: [CustomForecastIndicatorPersistentAdapter, IndicatorBoardMetadataPersistentAdapter],
     }).compile();
     customForecastIndicatorPersistentAdapter = module.get(CustomForecastIndicatorPersistentAdapter);
     indicatorBoardMetadataPersistentAdapter = module.get(IndicatorBoardMetadataPersistentAdapter);
@@ -218,7 +220,7 @@ describe('CustomForecastIndicatorPersistentAdapter', () => {
       exchange: 'KOSPI',
       symbol: 'PPAL',
     });
-    const memberId: string = '1';
+    const memberId: string = '11111111-1111-1111-1111-111111111111';
 
     // when
     const resultId = await customForecastIndicatorPersistentAdapter.createCustomForecastIndicator(

@@ -12,7 +12,6 @@ import { IndicatorBoardMetadataEntity } from './entity/indicator-board-metadata.
 import { IndicatorBoardMetadataMapper } from './mapper/indicator-board-metadata.mapper';
 import { InjectRepository } from '@nestjs/typeorm';
 import { QueryFailedError, Repository } from 'typeorm';
-import { AuthService } from '../../../../../auth/application/auth.service';
 import { LoadIndicatorBoardMetadataPort } from 'src/numerical-guidance/application/port/persistence/indicator-board-metadata/load-indiactor-board-metadata.port';
 import { InsertIndicatorIdPort } from '../../../../application/port/persistence/indicator-board-metadata/insert-indicator-id.port';
 import { TypeORMError } from 'typeorm/error/TypeORMError';
@@ -24,6 +23,7 @@ import { UpdateIndicatorBoardMetadataNamePort } from '../../../../application/po
 import { InsertCustomForecastIndicatorIdPort } from 'src/numerical-guidance/application/port/persistence/indicator-board-metadata/insert-custom-forecast-indicator-id.port';
 import { DeleteCustomForecastIndicatorIdPort } from 'src/numerical-guidance/application/port/persistence/indicator-board-metadata/delete-custom-forecast-indicator-id.port';
 import { UpdateSectionsPort } from '../../../../application/port/persistence/indicator-board-metadata/update-sections.port';
+import { UserMetadataEntity } from '../../../../../user/infrastructure/adapter/persistence/entity/user-metadata.entity';
 
 @Injectable()
 export class IndicatorBoardMetadataPersistentAdapter
@@ -42,7 +42,8 @@ export class IndicatorBoardMetadataPersistentAdapter
   constructor(
     @InjectRepository(IndicatorBoardMetadataEntity)
     private readonly indicatorBoardMetadataRepository: Repository<IndicatorBoardMetadataEntity>,
-    private readonly authService: AuthService,
+    @InjectRepository(UserMetadataEntity)
+    private readonly userMetadataRepository: Repository<UserMetadataEntity>,
   ) {}
 
   async createIndicatorBoardMetadata(
@@ -50,7 +51,9 @@ export class IndicatorBoardMetadataPersistentAdapter
     memberId: string,
   ): Promise<string> {
     try {
-      const member = await this.authService.findById(memberId);
+      const member = await this.userMetadataRepository.findOne({
+        where: { userId: memberId },
+      });
       this.nullCheckForEntity(member);
 
       const indicatorBoardMetaDataEntity: IndicatorBoardMetadataEntity =
@@ -111,7 +114,9 @@ export class IndicatorBoardMetadataPersistentAdapter
 
   async loadIndicatorBoardMetadataList(memberId): Promise<IndicatorBoardMetadata[]> {
     try {
-      const memberEntity = await this.authService.findById(memberId);
+      const memberEntity = await this.userMetadataRepository.findOne({
+        where: { userId: memberId },
+      });
       this.nullCheckForEntity(memberEntity);
 
       const indicatorBoardMetadataEntities: IndicatorBoardMetadataEntity[] =
@@ -343,15 +348,13 @@ export class IndicatorBoardMetadataPersistentAdapter
     try {
       const indicatorBoardMetadataEntity: IndicatorBoardMetadataEntity =
         await this.indicatorBoardMetadataRepository.findOne({
+          where: { id },
           relations: ['member'],
-          where: {
-            id,
-          },
         });
       this.nullCheckForEntity(indicatorBoardMetadataEntity);
 
       const { member } = indicatorBoardMetadataEntity;
-      const metadatas = await this.loadIndicatorBoardMetadataList(member.id);
+      const metadatas = await this.loadIndicatorBoardMetadataList(member.userId);
       if (metadatas.length <= 1) {
         throw new BadRequestException();
       }

@@ -5,8 +5,8 @@ import {
   IndicatorType,
   SourceIndicatorInformation,
   Verification,
-} from 'src/utils/type/type-definition';
-import { MemberEntity } from 'src/auth/entity/member.entity';
+} from 'src/commons/type/type-definition';
+import { UserMetadataEntity } from 'src/user/infrastructure/adapter/persistence/entity/user-metadata.entity';
 
 @Entity({ name: 'CustomForecastIndicator' })
 export class CustomForecastIndicatorEntity extends BaseEntity {
@@ -34,8 +34,8 @@ export class CustomForecastIndicatorEntity extends BaseEntity {
   @Column('jsonb', { nullable: true })
   sourceIndicators: IndicatorDtoType[];
 
-  @ManyToOne(() => MemberEntity, { eager: false })
-  member: MemberEntity;
+  @ManyToOne(() => UserMetadataEntity, { eager: false })
+  member: UserMetadataEntity;
 
   constructor(
     customForecastIndicatorName: string,
@@ -45,7 +45,7 @@ export class CustomForecastIndicatorEntity extends BaseEntity {
     cointJohansenVerification: Verification[],
     sourceIndicatorsInformation: SourceIndicatorInformation[],
     sourceIndicators: IndicatorDtoType[],
-    member: MemberEntity,
+    member: UserMetadataEntity,
     createdAt: Date,
     updatedAt: Date,
   ) {
@@ -70,7 +70,7 @@ export class CustomForecastIndicatorEntity extends BaseEntity {
     cointJohansenVerification: Verification[],
     sourceIndicatorsInformation: SourceIndicatorInformation[],
     sourceIndicators: IndicatorDtoType[],
-    member: MemberEntity,
+    member: UserMetadataEntity,
     createdAt: Date,
     updatedAt: Date,
   ) {

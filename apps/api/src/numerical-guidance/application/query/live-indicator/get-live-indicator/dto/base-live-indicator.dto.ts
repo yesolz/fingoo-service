@@ -1,4 +1,4 @@
-import { IndicatorType, IndicatorValue } from 'src/utils/type/type-definition';
+import { IndicatorType, IndicatorValue } from 'src/commons/type/type-definition';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class BaseLiveIndicatorDto {

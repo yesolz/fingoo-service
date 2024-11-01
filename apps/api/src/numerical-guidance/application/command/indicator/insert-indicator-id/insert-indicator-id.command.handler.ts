@@ -6,7 +6,7 @@ import { InsertIndicatorIdCommand } from './insert-indicator-id.command';
 import { LoadIndicatorBoardMetadataPort } from '../../../port/persistence/indicator-board-metadata/load-indiactor-board-metadata.port';
 import { IndicatorBoardMetadata, IndicatorInfo } from '../../../../domain/indicator-board-metadata';
 import { LoadIndicatorPort } from '../../../port/persistence/indicator/load-indicator.port';
-import { IndicatorDtoType } from '../../../../../utils/type/type-definition';
+import { IndicatorDtoType } from '../../../../../commons/type/type-definition';
 
 @Injectable()
 @CommandHandler(InsertIndicatorIdCommand)

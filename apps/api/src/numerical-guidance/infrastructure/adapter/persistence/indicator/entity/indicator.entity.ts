@@ -1,4 +1,4 @@
-import { IndicatorType } from 'src/utils/type/type-definition';
+import { IndicatorType } from 'src/commons/type/type-definition';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { BaseEntity } from '../../base.entity';
 

@@ -3,8 +3,8 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { initializeTransactionalContext } from 'typeorm-transactional';
-import { HttpExceptionFilter } from './utils/exception-filter/http-exception-filter';
-import { CustomAuthGuard } from './auth/util/custom-auth.guard';
+import { HttpExceptionFilter } from './commons/exception-filter/http-exception-filter';
+import { JwtAuthGuard } from './user/util/jwt-auth.guard';
 
 async function bootstrap() {
   initializeTransactionalContext();
@@ -54,7 +54,7 @@ async function bootstrap() {
     credentials: true,
   });
 
-  app.useGlobalGuards(new CustomAuthGuard());
+  app.useGlobalGuards(app.get(JwtAuthGuard));
   app.useGlobalFilters(new HttpExceptionFilter());
   await app.listen(8000);
 }

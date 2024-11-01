@@ -1,5 +1,5 @@
 import { IQuery } from '@nestjs/cqrs';
-import { IndicatorType, Interval } from '../../../../../utils/type/type-definition';
+import { IndicatorType, Interval } from '../../../../../commons/type/type-definition';
 
 export class GetLiveIndicatorQuery implements IQuery {
   constructor(
