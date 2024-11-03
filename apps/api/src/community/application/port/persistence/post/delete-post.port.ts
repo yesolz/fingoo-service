@@ -1,3 +1,3 @@
-// export class DeletePostPort {
-//   deletePost(postId, userId): Promise<boolean>;
-// }
+export class DeletePostPort {
+  deletePost(postId, userId): Promise<boolean>;
+}
