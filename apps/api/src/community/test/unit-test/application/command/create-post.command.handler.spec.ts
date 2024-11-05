@@ -10,6 +10,10 @@ import { UserMetadataMapper } from '../../../../../user/infrastructure/adapter/p
 import { LIMITCONTENT } from '../../../data/limit.content';
 import { mockUserMetadataData1 } from '../../../../../user/test/data/mock-user.metadata.data1';
 
+jest.mock('typeorm-transactional', () => ({
+  Transactional: () => () => ({}),
+}));
+
 describe('CreatePost', () => {
   let createPostPort: CreatePostPort;
 
