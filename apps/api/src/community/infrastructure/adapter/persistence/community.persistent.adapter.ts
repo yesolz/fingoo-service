@@ -16,9 +16,10 @@ import { BusinessRuleValidationException } from '../../../../commons/domain/busi
 import { UserMetadataEntity } from '../../../../user/infrastructure/adapter/persistence/entity/user-metadata.entity';
 import { UpdatePostPort } from '../../../application/port/persistence/post/update-post.port';
 import { Transactional } from 'typeorm-transactional';
+import { DeletePostPort } from '../../../application/port/persistence/post/delete-post.port';
 
 @Injectable()
-export class CommunityPersistentAdapter implements CreatePostPort, UpdatePostPort {
+export class CommunityPersistentAdapter implements CreatePostPort, UpdatePostPort, DeletePostPort {
   constructor(
     @InjectRepository(PostEntity)
     private readonly postEntityRepository: Repository<PostEntity>,
@@ -98,8 +99,32 @@ export class CommunityPersistentAdapter implements CreatePostPort, UpdatePostPor
     }
   }
 
-  //
-  // async deletePost(postId, userId): Promise<boolean> {
-  //   throw new HttpException('Not Implemented', HttpStatus.NOT_IMPLEMENTED);
-  // }
+  async deletePost(postId, userId): Promise<boolean> {
+    const postEntity: PostEntity = await this.postEntityRepository.findOne({ where: { id: postId } });
+    if (postEntity === null) {
+      throw new NotFoundException({
+        HttpStatus: HttpStatus.NOT_FOUND,
+        error: '[ERROR] 해당 게시글이 존재하지 않습니다.',
+        message: '해당 게시글이 존재하지 않습니다.',
+      });
+    }
+    if (postEntity.userId !== userId) {
+      throw new ForbiddenException({
+        HttpStatus: HttpStatus.FORBIDDEN,
+        error: '[ERROR] 해당 게시글을 삭제할 권한이 없습니다.',
+        message: '해당 게시글을 삭제할 권한이 없습니다.',
+      });
+    }
+    try {
+      await this.postEntityRepository.remove(postEntity);
+      return true;
+    } catch (error) {
+      throw new InternalServerErrorException({
+        HttpStatus: HttpStatus.INTERNAL_SERVER_ERROR,
+        error: '[ERROR] 서버 내부 에러 발생',
+        message: error.message,
+        cause: error.message,
+      });
+    }
+  }
 }

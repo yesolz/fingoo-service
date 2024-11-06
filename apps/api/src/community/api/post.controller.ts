@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, HttpStatus, Param, Patch, Post, Res, UseGuards } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreatePostCommand } from 'src/community/application/command/post/create-post/create-post.command';
 import { CreatePostRequestDto } from './dto/request/create-post.request.dto';
@@ -11,6 +11,8 @@ import { JwtAuthGuard } from '../../user/util/jwt-auth.guard';
 import { UpdatePostRequestDto } from './dto/request/update-post.request.dto';
 import { UpdatePostCommand } from '../application/command/post/update-post/update-post.command';
 import { UpdatePostResponseDto } from './dto/response/update-post.response.dto';
+import { DeletePostCommand } from '../application/command/post/delete-post/delete-post.command';
+import { Response } from 'express';
 
 @ApiTags('PostController')
 @Controller('/api/community/post')
@@ -57,17 +59,21 @@ export class PostController {
     const command = new UpdatePostCommand(updatePostRequestDto.content, postId, user.id);
     return this.commandBus.execute(command);
   }
-  //
-  // @ApiOperation({ summary: '커뮤니티에 게시글을 삭제합니다.' })
-  // @ApiResponse({ status: 204, description: '게시글 삭제 성공' })
-  // @ApiExceptionResponse(400, 'Bad Request', '[ERROR]400 Bad Request')
-  // @ApiExceptionResponse(404, 'Not Found', '[ERROR]404 Not Found')
-  // @ApiBearerAuth('Authorization')
-  // @Delete('/:postId')
-  // @UseGuards(JwtAuthGuard)
-  // async deletePost(@Param('postId') postId: string, @LoginUser() user: User, @Res() res: Response) {
-  //   const command = new DeletePostCommand(postId, user.id);
-  //   await this.commandBus.execute(command);
-  //   res.status(HttpStatus.NO_CONTENT).send();
-  // }
+
+  @ApiOperation({ summary: '커뮤니티에 게시글을 삭제합니다.' })
+  @ApiResponse({ status: 204, description: '게시글 삭제 성공' })
+  @ApiExceptionResponse(400, 'Bad Request', '[ERROR]400 Bad Request')
+  @ApiExceptionResponse(404, 'Not Found', '[ERROR]404 Not Found')
+  @ApiBearerAuth('Authorization')
+  @Delete('/:postId')
+  @UseGuards(JwtAuthGuard)
+  async deletePost(@Param('postId') postId: string, @LoginUser() user: User, @Res() response: Response) {
+    const command = new DeletePostCommand(postId, user.id);
+    try {
+      await this.commandBus.execute(command);
+      response.status(HttpStatus.OK).send({ message: '게시글이 삭제되었습니다.' });
+    } catch (error) {
+      response.status(error.status).send({ message: error.message });
+    }
+  }
 }
