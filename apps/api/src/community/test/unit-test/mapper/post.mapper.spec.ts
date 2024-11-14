@@ -59,7 +59,7 @@ describe('PostMapper', () => {
   test('mapEntityToDomain should map PostEntity and UserMetadataEntity to PostDomain', () => {
     const result: PostDomain = PostMapper.mapEntityToDomain(postEntity0, userMetadataEntity);
     expect(result.id).toBe(postEntity0.id);
-    expect(result.userMetadataDomain).toBe(userMetadataDomain);
+    expect(result.userMetadataDomain).toStrictEqual(userMetadataDomain);
     expect(result.content).toBe(postEntity0.content);
     expect(result.viewCount).toBe(postEntity0.viewCount);
     expect(result.createdAt).toBe(postEntity0.createdAt);
