@@ -11,3 +11,7 @@ export enum QuoteIndicatorIntervalEnum {
   WEEK1 = '1week',
   MONTH1 = '1month',
 }
+export enum Order {
+  ASC = 'asc',
+  DESC = 'desc',
+}
