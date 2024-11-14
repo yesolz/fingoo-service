@@ -13,8 +13,8 @@ export class GetPostsRequestDto {
 
   @ApiProperty({
     example: '10',
-    description: '커서 정보(게시글 index)',
+    description: '커서 정보(게시글 index), null이면 처음 조회하는 것',
   })
   @Type(() => Number)
-  readonly cursorId?: number;
+  readonly cursorId?: number = null;
 }

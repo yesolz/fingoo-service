@@ -140,11 +140,20 @@ export class CommunityPersistentAdapter implements CreatePostPort, UpdatePostPor
     try {
       const [postEntities, total] = await this.postEntityRepository.findAndCount({
         where: whereCondition,
-        take: take + 1,
+        take: take,
         order: { id: Order.DESC },
       });
+
+      if (postEntities.length === 0 && cursor) {
+        throw new NotFoundException({
+          HttpStatus: HttpStatus.NOT_FOUND,
+          error: '[ERROR] 해당 커서에 해당하는 게시글이 존재하지 않습니다.',
+          message: '해당 커서에 해당하는 게시글이 존재하지 않습니다.',
+        });
+      }
+
       const postDomains: PostDomain[] = await Promise.all(
-        postEntities.slice(0, take).map(async (postEntity) => {
+        postEntities.map(async (postEntity) => {
           const userMetadataEntity = await this.userMetadataEntityRepository.findOne({
             where: { id: postEntity.userId },
           });
@@ -152,8 +161,8 @@ export class CommunityPersistentAdapter implements CreatePostPort, UpdatePostPor
         }),
       );
 
-      const hasNextData = postEntities.length === take + 1;
-      const nextCursor = hasNextData ? postEntities[take].id : null;
+      const hasNextData = total === take;
+      const nextCursor = hasNextData ? postDomains[postDomains.length - 1].id : null;
 
       return {
         postDomains,
@@ -162,6 +171,9 @@ export class CommunityPersistentAdapter implements CreatePostPort, UpdatePostPor
         nextCursor,
       };
     } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
       throw new InternalServerErrorException({
         HttpStatus: HttpStatus.INTERNAL_SERVER_ERROR,
         error: '[ERROR] 서버 내부 에러 발생',
