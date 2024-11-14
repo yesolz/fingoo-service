@@ -9,7 +9,7 @@ import {
 import { PostEntity } from './entity/post.entity';
 import { CreatePostPort } from '../../../application/port/persistence/post/create-post.port';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { LessThan, Repository } from 'typeorm';
 import { PostDomain } from '../../../domain/post.domain';
 import { PostMapper } from './mapper/post.mapper';
 import { BusinessRuleValidationException } from '../../../../commons/domain/business-rule-validation.exception';
@@ -17,9 +17,11 @@ import { UserMetadataEntity } from '../../../../user/infrastructure/adapter/pers
 import { UpdatePostPort } from '../../../application/port/persistence/post/update-post.port';
 import { Transactional } from 'typeorm-transactional';
 import { DeletePostPort } from '../../../application/port/persistence/post/delete-post.port';
+import { GetPostsPort } from '../../../application/port/persistence/post/get-posts.port';
+import { Order } from '../../../../commons/enum/enum-definition';
 
 @Injectable()
-export class CommunityPersistentAdapter implements CreatePostPort, UpdatePostPort, DeletePostPort {
+export class CommunityPersistentAdapter implements CreatePostPort, UpdatePostPort, DeletePostPort, GetPostsPort {
   constructor(
     @InjectRepository(PostEntity)
     private readonly postEntityRepository: Repository<PostEntity>,
@@ -118,6 +120,47 @@ export class CommunityPersistentAdapter implements CreatePostPort, UpdatePostPor
     try {
       await this.postEntityRepository.remove(postEntity);
       return true;
+    } catch (error) {
+      throw new InternalServerErrorException({
+        HttpStatus: HttpStatus.INTERNAL_SERVER_ERROR,
+        error: '[ERROR] 서버 내부 에러 발생',
+        message: error.message,
+        cause: error.message,
+      });
+    }
+  }
+
+  @Transactional()
+  async getPostPageByCursor(
+    take: number,
+    cursor: number,
+  ): Promise<{ postDomains: PostDomain[]; total: number; hasNextData: boolean; nextCursor: number }> {
+    const whereCondition = cursor ? { id: LessThan(cursor) } : {};
+
+    try {
+      const [postEntities, total] = await this.postEntityRepository.findAndCount({
+        where: whereCondition,
+        take: take + 1,
+        order: { id: Order.DESC },
+      });
+      const postDomains: PostDomain[] = await Promise.all(
+        postEntities.slice(0, take).map(async (postEntity) => {
+          const userMetadataEntity = await this.userMetadataEntityRepository.findOne({
+            where: { id: postEntity.userId },
+          });
+          return PostMapper.mapEntityToDomain(postEntity, userMetadataEntity);
+        }),
+      );
+
+      const hasNextData = postEntities.length === take + 1;
+      const nextCursor = hasNextData ? postEntities[take].id : null;
+
+      return {
+        postDomains,
+        total,
+        hasNextData,
+        nextCursor,
+      };
     } catch (error) {
       throw new InternalServerErrorException({
         HttpStatus: HttpStatus.INTERNAL_SERVER_ERROR,
