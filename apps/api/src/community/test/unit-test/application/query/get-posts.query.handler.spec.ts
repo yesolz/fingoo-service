@@ -41,11 +41,11 @@ describe('GetPosts', () => {
   };
   const mockUserMetadataRepository = {
     find: jest.fn(),
-    findOne: jest.fn().mockImplementation(({ where: { id } }) => {
-      if (id === userMetadataEntity0.userId) {
+    findOne: jest.fn().mockImplementation(({ where: { userId } }) => {
+      if (userId === userMetadataEntity0.userId) {
         return userMetadataEntity0;
       }
-      if (id === userMetadataEntity1.userId) {
+      if (userId === userMetadataEntity1.userId) {
         return userMetadataEntity1;
       }
       return null;
