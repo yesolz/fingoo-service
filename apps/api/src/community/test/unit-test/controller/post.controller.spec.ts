@@ -56,4 +56,8 @@ describe('PostController', () => {
     };
     await expect(postController.getPosts(getPostsRequestDto)).resolves.not.toThrow();
   });
+
+  it('get', async () => {
+    await expect(postController.getPost('123')).resolves.not.toThrow();
+  });
 });
