@@ -30,6 +30,16 @@ export class PostMapper {
     );
   }
 
+  static mapDomainToGetDto(post: PostDomain) {
+    return new GetPostReponseDto(
+      post.id.toString(),
+      post.content,
+      post.userMetadataDomain.username,
+      post.createdAt.toString(),
+      post.updatedAt.toString(),
+    );
+  }
+
   static mapDomainsToGetPageDto(
     postDomains: PostDomain[],
     total: number,
