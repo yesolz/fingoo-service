@@ -6,7 +6,7 @@ const API_URL =
       : 'http://localhost:8000/api';
 
 export const API_PATH = {
-  auth: `${API_URL}/auth`,
+  user: `${API_URL}/user`,
   indicatorList: `${API_URL}/numerical-guidance/indicator`,
   indicatorBoardMetadata: `${API_URL}/numerical-guidance/indicator-board-metadata`,
   liveIndicatorValue: `${API_URL}/numerical-guidance/indicators/live`, // refactor: be 수정되면 k-stock 사라져야함
