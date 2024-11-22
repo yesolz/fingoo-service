@@ -1,5 +1,5 @@
 import { Module, Global } from '@nestjs/common';
-import { SupabaseConnection } from './supabase.connection';
+import { SupabaseConnection } from './infrastructure/adapter/supabase/supabase.connection';
 
 @Global()
 @Module({

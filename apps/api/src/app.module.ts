@@ -13,7 +13,7 @@ import { UserModule } from './user/user.module';
 import { addTransactionalDataSource } from 'typeorm-transactional';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './user/util/jwt-auth.guard';
-import { SupabaseModule } from './user/infrastructure/adapter/supabase/supabase.module';
+import { SupabaseModule } from './user/supabase.module';
 import { SupabaseConnection } from './user/infrastructure/adapter/supabase/supabase.connection';
 
 @Module({
