@@ -7,40 +7,43 @@ import { fetchPosts } from './[id]/lib/data';
 import { CalendarIcon } from 'lucide-react';
 import BlogBreadcrumb from './[id]/components/blog-breadcrumb';
 import Callout from './ui/components/view/molecule/callout';
+import MockingUser from './ui/components/util/mocking-user';
 
 export default async function Page() {
   const posts = await fetchPosts();
 
   return (
     <>
-      <div className="min-h-screen bg-white">
-        <div className="fixed left-10 top-4">
-          <BlogBreadcrumb />
-        </div>
-        <div className="fixed bottom-2 left-1/2 z-10 -translate-x-1/2 rounded-lg ">
-          <Callout>
-            FINGOO 워크스페이스로 이동하려면{'   '}
-            <Link className="underline hover:text-gray-100" href="/blog">
-              여기
-            </Link>
-            를 클릭하세요.
-          </Callout>
-        </div>
-        <div className="mx-auto max-w-2xl ">
-          <div className="flex flex-col items-center justify-center pb-28 pt-20">
-            <h2 className="mb-2 text-4xl font-bold">FINGOO 블로그</h2>
+      <MockingUser>
+        <div className="min-h-screen bg-white">
+          <div className="fixed left-10 top-4">
+            <BlogBreadcrumb />
           </div>
-          {posts.map((post) => (
-            <Link key={post.id} href={`/${post.id}`}>
-              <BlogPostItem
-                title={post.title}
-                date={post.updatedAt.toISOString().slice(0, 10)}
-                preview={post.preview}
-              />
-            </Link>
-          ))}
+          <div className="fixed bottom-2 left-1/2 z-10 -translate-x-1/2 rounded-lg ">
+            <Callout>
+              FINGOO 워크스페이스로 이동하려면{'   '}
+              <Link className="underline hover:text-gray-100" href="/workspace">
+                여기
+              </Link>
+              를 클릭하세요.
+            </Callout>
+          </div>
+          <div className="mx-auto max-w-2xl ">
+            <div className="flex flex-col items-center justify-center pb-28 pt-20">
+              <h2 className="mb-2 text-4xl font-bold">FINGOO 블로그</h2>
+            </div>
+            {posts.map((post) => (
+              <Link key={post.id} href={`/${post.id}`}>
+                <BlogPostItem
+                  title={post.title}
+                  date={post.updatedAt.toISOString().slice(0, 10)}
+                  preview={post.preview}
+                />
+              </Link>
+            ))}
+          </div>
         </div>
-      </div>
+      </MockingUser>
     </>
   );
 }

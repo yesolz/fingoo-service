@@ -13,6 +13,8 @@ import { UserModule } from './user/user.module';
 import { addTransactionalDataSource } from 'typeorm-transactional';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './user/util/jwt-auth.guard';
+import { SupabaseModule } from './user/supabase.module';
+import { SupabaseConnection } from './user/infrastructure/adapter/supabase/supabase.connection';
 
 @Module({
   imports: [
@@ -36,13 +38,17 @@ import { JwtAuthGuard } from './user/util/jwt-auth.guard';
     CommunityModule,
     NumericalGuidanceModule,
     UserModule,
+    SupabaseModule,
   ],
   controllers: [AppController],
   providers: [
     AppService,
     {
       provide: APP_GUARD,
-      useClass: JwtAuthGuard,
+      useFactory: (supabaseConnection: SupabaseConnection) => {
+        return new JwtAuthGuard(supabaseConnection);
+      },
+      inject: [SupabaseConnection],
     },
   ],
 })
