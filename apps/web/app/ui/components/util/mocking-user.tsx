@@ -9,7 +9,7 @@ export default function MockingUser({ children }: React.PropsWithChildren) {
   useEffect(() => {
     async function enableMocking() {
       if (typeof window !== 'undefined') {
-        const response = await fetch(`${API_PATH.auth}/signIn`, {
+        const response = await fetch(`${API_PATH.user}/signIn`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -22,8 +22,8 @@ export default function MockingUser({ children }: React.PropsWithChildren) {
 
         console.log(response);
         const result = await response.json();
-        // console.log(result);
-        Cookies.set('accessToken', result.accessToken, {
+        console.log(result);
+        Cookies.set('accessToken', result.session.access_token, {
           secure: true,
           path: '/',
         });
