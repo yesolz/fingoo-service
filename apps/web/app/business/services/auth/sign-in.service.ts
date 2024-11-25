@@ -26,7 +26,7 @@ export async function authenticate(prevState: FormState, formData: FormData): Pr
   };
 
   try {
-    const response = await fetch(`${API_PATH.auth}/signIn`, {
+    const response = await fetch(`${API_PATH.user}/signIn`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
