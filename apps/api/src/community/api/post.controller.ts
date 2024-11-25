@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, HttpStatus, Param, Patch, Post, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, Query, Res, UseGuards } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreatePostCommand } from 'src/community/application/command/post/create-post/create-post.command';
 import { CreatePostRequestDto } from './dto/request/create-post.request.dto';
@@ -13,6 +13,8 @@ import { UpdatePostCommand } from '../application/command/post/update-post/updat
 import { UpdatePostResponseDto } from './dto/response/update-post.response.dto';
 import { DeletePostCommand } from '../application/command/post/delete-post/delete-post.command';
 import { Response } from 'express';
+import { GetPostsRequestDto } from './dto/request/get-posts.request.dto';
+import { GetPostsQuery } from '../application/query/post/get-posts/get-posts.query';
 
 @ApiTags('PostController')
 @Controller('/api/community/post')
@@ -39,10 +41,18 @@ export class PostController {
   //   return this.queryBus.execute(new GetPostsQuery());
   // }
   //
-  // @Get('/:postId')
-  // async getPosts() {
-  //   return this.queryBus.execute(new GetPostsQuery());
-  // }
+
+  @ApiOperation({ summary: '커뮤니티 게시글을 리스트로 조회합니다.' })
+  @ApiResponse({ status: HttpStatus.OK, description: '게시글 조회 성공', type: CreatePostResponseDto })
+  @ApiExceptionResponse(HttpStatus.BAD_REQUEST, 'Bad Request', '[ERROR]400 Bad Request')
+  @ApiExceptionResponse(HttpStatus.NOT_FOUND, 'Not Found', '[ERROR]404 Not Found')
+  @ApiBearerAuth('Authorization')
+  @Get()
+  @UseGuards(JwtAuthGuard)
+  async getPosts(@Query() getPostsRequestDto: GetPostsRequestDto) {
+    const query = new GetPostsQuery(getPostsRequestDto.take, getPostsRequestDto.cursorId);
+    return this.queryBus.execute(query);
+  }
 
   @ApiOperation({ summary: '커뮤니티에 게시글을 수정합니다.' })
   @ApiResponse({ status: 200, description: '게시글 수정 성공', type: UpdatePostResponseDto })

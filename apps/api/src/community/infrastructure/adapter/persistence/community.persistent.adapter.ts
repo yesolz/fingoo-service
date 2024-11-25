@@ -9,7 +9,7 @@ import {
 import { PostEntity } from './entity/post.entity';
 import { CreatePostPort } from '../../../application/port/persistence/post/create-post.port';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { LessThan, Repository } from 'typeorm';
 import { PostDomain } from '../../../domain/post.domain';
 import { PostMapper } from './mapper/post.mapper';
 import { BusinessRuleValidationException } from '../../../../commons/domain/business-rule-validation.exception';
@@ -17,9 +17,11 @@ import { UserMetadataEntity } from '../../../../user/infrastructure/adapter/pers
 import { UpdatePostPort } from '../../../application/port/persistence/post/update-post.port';
 import { Transactional } from 'typeorm-transactional';
 import { DeletePostPort } from '../../../application/port/persistence/post/delete-post.port';
+import { GetPostsPort } from '../../../application/port/persistence/post/get-posts.port';
+import { Order } from '../../../../commons/enum/enum-definition';
 
 @Injectable()
-export class CommunityPersistentAdapter implements CreatePostPort, UpdatePostPort, DeletePostPort {
+export class CommunityPersistentAdapter implements CreatePostPort, UpdatePostPort, DeletePostPort, GetPostsPort {
   constructor(
     @InjectRepository(PostEntity)
     private readonly postEntityRepository: Repository<PostEntity>,
@@ -119,6 +121,59 @@ export class CommunityPersistentAdapter implements CreatePostPort, UpdatePostPor
       await this.postEntityRepository.remove(postEntity);
       return true;
     } catch (error) {
+      throw new InternalServerErrorException({
+        HttpStatus: HttpStatus.INTERNAL_SERVER_ERROR,
+        error: '[ERROR] 서버 내부 에러 발생',
+        message: error.message,
+        cause: error.message,
+      });
+    }
+  }
+
+  @Transactional()
+  async getPostPageByCursor(
+    take: number,
+    cursor: number,
+  ): Promise<{ postDomains: PostDomain[]; total: number; hasNextData: boolean; nextCursor: number }> {
+    const whereCondition = cursor ? { id: LessThan(cursor) } : {};
+
+    try {
+      const [postEntities, total] = await this.postEntityRepository.findAndCount({
+        where: whereCondition,
+        take: take,
+        order: { id: Order.DESC },
+      });
+
+      if (postEntities.length === 0 && cursor) {
+        throw new NotFoundException({
+          HttpStatus: HttpStatus.NOT_FOUND,
+          error: '[ERROR] 해당 커서에 해당하는 게시글이 존재하지 않습니다.',
+          message: '해당 커서에 해당하는 게시글이 존재하지 않습니다.',
+        });
+      }
+
+      const postDomains: PostDomain[] = await Promise.all(
+        postEntities.map(async (postEntity) => {
+          const userMetadataEntity = await this.userMetadataEntityRepository.findOne({
+            where: { id: postEntity.userId },
+          });
+          return PostMapper.mapEntityToDomain(postEntity, userMetadataEntity);
+        }),
+      );
+
+      const hasNextData = total === take;
+      const nextCursor = hasNextData ? postDomains[postDomains.length - 1].id : null;
+
+      return {
+        postDomains,
+        total,
+        hasNextData,
+        nextCursor,
+      };
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
       throw new InternalServerErrorException({
         HttpStatus: HttpStatus.INTERNAL_SERVER_ERROR,
         error: '[ERROR] 서버 내부 에러 발생',

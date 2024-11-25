@@ -1,5 +1,8 @@
 import { IQuery } from '@nestjs/cqrs';
 
 export class GetPostsQuery implements IQuery {
-  constructor() {}
+  constructor(
+    readonly take: number,
+    readonly cursor: number,
+  ) {}
 }
