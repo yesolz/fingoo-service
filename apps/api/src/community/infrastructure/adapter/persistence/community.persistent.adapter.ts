@@ -19,9 +19,12 @@ import { Transactional } from 'typeorm-transactional';
 import { DeletePostPort } from '../../../application/port/persistence/post/delete-post.port';
 import { GetPostsPort } from '../../../application/port/persistence/post/get-posts.port';
 import { Order } from '../../../../commons/enum/enum-definition';
+import { GetPostPort } from '../../../application/port/persistence/post/get-post.port';
 
 @Injectable()
-export class CommunityPersistentAdapter implements CreatePostPort, UpdatePostPort, DeletePostPort, GetPostsPort {
+export class CommunityPersistentAdapter
+  implements CreatePostPort, UpdatePostPort, DeletePostPort, GetPostsPort, GetPostPort
+{
   constructor(
     @InjectRepository(PostEntity)
     private readonly postEntityRepository: Repository<PostEntity>,
@@ -155,7 +158,7 @@ export class CommunityPersistentAdapter implements CreatePostPort, UpdatePostPor
       const postDomains: PostDomain[] = await Promise.all(
         postEntities.map(async (postEntity) => {
           const userMetadataEntity = await this.userMetadataEntityRepository.findOne({
-            where: { id: postEntity.userId },
+            where: { userId: postEntity.userId },
           });
           return PostMapper.mapEntityToDomain(postEntity, userMetadataEntity);
         }),
@@ -174,6 +177,31 @@ export class CommunityPersistentAdapter implements CreatePostPort, UpdatePostPor
       if (error instanceof NotFoundException) {
         throw error;
       }
+      throw new InternalServerErrorException({
+        HttpStatus: HttpStatus.INTERNAL_SERVER_ERROR,
+        error: '[ERROR] 서버 내부 에러 발생',
+        message: error.message,
+        cause: error.message,
+      });
+    }
+  }
+
+  @Transactional()
+  async getPost(postId): Promise<PostDomain> {
+    const postEntity: PostEntity = await this.postEntityRepository.findOne({ where: { id: postId } });
+    if (postEntity === null) {
+      throw new NotFoundException({
+        HttpStatus: HttpStatus.NOT_FOUND,
+        error: '[ERROR] 해당 게시글이 존재하지 않습니다.',
+        message: '해당 게시글이 존재하지 않습니다.',
+      });
+    }
+    try {
+      const userMetadataEntity: UserMetadataEntity = await this.userMetadataEntityRepository.findOne({
+        where: { userId: postEntity.userId },
+      });
+      return PostMapper.mapEntityToDomain(postEntity, userMetadataEntity);
+    } catch (error) {
       throw new InternalServerErrorException({
         HttpStatus: HttpStatus.INTERNAL_SERVER_ERROR,
         error: '[ERROR] 서버 내부 에러 발생',

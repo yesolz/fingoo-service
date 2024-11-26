@@ -79,4 +79,13 @@ describe('PostMapper', () => {
     expect(result.meta.hasNextData).toBeFalsy();
     expect(result.meta.nestCursor).toBeNull();
   });
+
+  test('mapDomainToGetDto should map PostDomain to GetPostResponseDto', () => {
+    const result: GetPostReponseDto = PostMapper.mapDomainToGetDto(postDomain0);
+    expect(result.postId).toBe(postDomain0.id.toString());
+    expect(result.content).toBe(postDomain0.content);
+    expect(result.author).toBe(postDomain0.userMetadataDomain.username);
+    expect(result.createdAt).toBe(postDomain0.createdAt.toString());
+    expect(result.updatedAt).toBe(postDomain0.updatedAt.toString());
+  });
 });

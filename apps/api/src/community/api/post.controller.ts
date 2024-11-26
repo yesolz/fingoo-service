@@ -15,6 +15,9 @@ import { DeletePostCommand } from '../application/command/post/delete-post/delet
 import { Response } from 'express';
 import { GetPostsRequestDto } from './dto/request/get-posts.request.dto';
 import { GetPostsQuery } from '../application/query/post/get-posts/get-posts.query';
+import { GetPostsResponseDto } from './dto/response/get-posts.response.dto';
+import { GetPostReponseDto } from './dto/response/get-post.reponse.dto';
+import { GetPostQuery } from '../application/query/post/get-post/get-post.query';
 
 @ApiTags('PostController')
 @Controller('/api/community/post')
@@ -36,14 +39,20 @@ export class PostController {
     return this.commandBus.execute(command);
   }
 
-  // @Get()
-  // async getPost() {
-  //   return this.queryBus.execute(new GetPostsQuery());
-  // }
-  //
+  @ApiOperation({ summary: '커뮤니티 게시글을 조회합니다.' })
+  @ApiResponse({ status: HttpStatus.OK, description: '게시글 조회 성공', type: GetPostReponseDto })
+  @ApiExceptionResponse(HttpStatus.BAD_REQUEST, 'Bad Request', '[ERROR]400 Bad Request')
+  @ApiExceptionResponse(HttpStatus.NOT_FOUND, 'Not Found', '[ERROR]404 Not Found')
+  @ApiBearerAuth('Authorization')
+  @Get('/:postId')
+  @UseGuards(JwtAuthGuard)
+  async getPost(@Param('postId') postId: string) {
+    const query = new GetPostQuery(postId);
+    return this.queryBus.execute(query);
+  }
 
   @ApiOperation({ summary: '커뮤니티 게시글을 리스트로 조회합니다.' })
-  @ApiResponse({ status: HttpStatus.OK, description: '게시글 조회 성공', type: CreatePostResponseDto })
+  @ApiResponse({ status: HttpStatus.OK, description: '게시글 조회 성공', type: GetPostsResponseDto })
   @ApiExceptionResponse(HttpStatus.BAD_REQUEST, 'Bad Request', '[ERROR]400 Bad Request')
   @ApiExceptionResponse(HttpStatus.NOT_FOUND, 'Not Found', '[ERROR]404 Not Found')
   @ApiBearerAuth('Authorization')
